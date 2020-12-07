@@ -16,7 +16,7 @@ class MainWindow(QWidget):
 
     # noinspection PyMethodMayBeStatic
     def run(self):
-        print("Run")
+        print("Run Run")
 
     # Nice way to close application
     # noinspection PyMethodMayBeStatic
