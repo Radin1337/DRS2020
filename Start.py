@@ -4,6 +4,8 @@ from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent
 from PyQt5.QtCore import Qt
 import sys
 
+from DRS2020.Settings import SettingsWindow
+
 
 class MainWindow(QWidget):
     MainWindowH = 600
@@ -16,7 +18,9 @@ class MainWindow(QWidget):
 
     # noinspection PyMethodMayBeStatic
     def run(self):
-        print("Run Run")
+        # print("Run Run")
+        self.settings = SettingsWindow(self)
+        self.hide()
 
     # Nice way to close application
     # noinspection PyMethodMayBeStatic
