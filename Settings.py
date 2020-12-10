@@ -31,6 +31,24 @@ class SettingsWindow(QMainWindow):
             self.label_1.resize(165, 20)
             self.label_1.setStyleSheet("background-color: lightgreen; ")
 
+            self.spin_2 = QSpinBox(self)
+            self.spin_2.setGeometry(350, 200, 100, 40)
+            self.spin_2.valueChanged.connect(self.show_result_2)
+            self.spin_2.setStyleSheet("background-color: lightgreen; border:2px solid blue;")
+            # self.label = QLabel(self)
+            self.label_2 = QLabel('Number of snakes', self)
+            self.label_2.setFont(QFont('Calibri', 10))
+            self.label_2.move(320, 180)
+            self.label_2.resize(165, 20)
+            self.label_2.setStyleSheet("background-color: lightgreen")
+
+            self.continueButton = QtWidgets.QPushButton("", self)
+            self.continueButton.setStyleSheet(
+                "border:2px solid blue; color: " "blue;font-size: 27px; font-family: Calibri; "
+                "background-image: url(resources/ContinueButton.jpg);")
+            self.continueButton.setGeometry(275, 340, 250, 50)
+            self.continueButton.setCursor(Qt.PointingHandCursor)
+            self.continueButton.released.connect(self.run)
 
             # show all the widgets
             self.show()
@@ -41,7 +59,13 @@ class SettingsWindow(QMainWindow):
             # setting value of spin box to the label
            #self.label.setText("Value : " + str(value))
 
-       
+        def show_result_2(self):
+            # getting current value
+            value = self.spin_2.value()
+
+        def run(self):
+            print("Run Run")
+
 
 
 
