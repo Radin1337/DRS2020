@@ -1,9 +1,11 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QComboBox, QMessageBox, QLabel, \
-    QVBoxLayout, QInputDialog, QSpinBox
-from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QFont
-from PyQt5.QtCore import Qt
+    QVBoxLayout, QInputDialog, QSpinBox, QGraphicsItem
+from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QFont, QImage, QBrush, QColor
+from PyQt5.QtCore import Qt, QRectF
 import sys
+
+from DRS2020.GameWindow import  GameWindow
 
 
 class SettingsWindow(QMainWindow):
@@ -64,7 +66,11 @@ class SettingsWindow(QMainWindow):
             value = self.spin_2.value()
 
         def run(self):
-            print("Run Run")
+            #print("Run Run")
+            self.gameWindow = GameWindow(self)
+            self.hide()
+
+
 
 
 
