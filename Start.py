@@ -1,10 +1,10 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QComboBox, QMessageBox, QLabel, QVBoxLayout
-from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent
+from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QIcon
 from PyQt5.QtCore import Qt
 import sys
 
-from DRS2020.Settings import SettingsWindow
+from Settings import SettingsWindow
 
 
 class MainWindow(QWidget):
@@ -30,10 +30,13 @@ class MainWindow(QWidget):
     def initUI(self):
         pixmap = QPixmap("resources/topimage.jpg")
         pixmap2 = pixmap.scaledToWidth(600)
+
         lbl = QLabel(self)
         lbl.setPixmap(pixmap2)
         lbl.move(100, 10)
         lbl.setStyleSheet("border: 2px solid blue;")
+
+        self.setWindowIcon(QIcon('resources/icon.png'))
 
         self.initMainMenuButtons()
         self.resize(self.MainWindowH, self.MainWindowW)

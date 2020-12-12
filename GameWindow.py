@@ -7,18 +7,29 @@ import sys
 
 # creating game window
 class GameWindow(QMainWindow):
+    GameWindowH = 600
+    GameWindowW = 800
+
     def __init__(self, settingswind):
         super(GameWindow, self).__init__()
         # adding board as a central widget
 
         # setting title to the window
         self.setWindowTitle('Game window')
-
+        self.setMinimumHeight(self.GameWindowH)
+        self.setMinimumWidth(self.GameWindowW)
+        self.setMaximumHeight(self.GameWindowH)
+        self.setMaximumWidth(self.GameWindowW)
         # setting geometry to the window
-        screen = QDesktopWidget().screenGeometry()
-        self.setGeometry(100, 100, screen.width(), screen.height())
-        self.setStyleSheet("background-image: url(resources/mapa.jpg);")
-
+        # screen = QDesktopWidget().screenGeometry()
+        # self.setGeometry(100, 100, screen.width(), screen.height())
+        # self.setStyleSheet("background-image: url(resources/mapa.jpg);")
+        self.setWindowIcon(QIcon('resources/icon.png'))
+        oImage = QImage("resources/mapa.jpg")
+        sImage = oImage.scaled(QSize(800, 600))  # resize Image to widgets size
+        palette = QPalette()
+        palette.setBrush(10, QBrush(sImage))  # 10 = WindowRole
+        self.setPalette(palette)
         self.center()
         self.show()
 
