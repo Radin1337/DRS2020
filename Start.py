@@ -4,7 +4,7 @@ from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QIcon
 from PyQt5.QtCore import Qt
 import sys
 
-from Settings import SettingsWindow
+from GameMode import GameModeWindow
 
 
 class MainWindow(QWidget):
@@ -19,7 +19,7 @@ class MainWindow(QWidget):
     # noinspection PyMethodMayBeStatic
     def run(self):
         # print("Run Run")
-        self.settings = SettingsWindow(self)
+        self.GameMode = GameModeWindow(self)
         self.hide()
 
     # Nice way to close application
@@ -46,8 +46,6 @@ class MainWindow(QWidget):
         self.setMaximumWidth(self.MainWindowW)
         self.setWindowTitle("Turn Snake - The first Snake turn based strategy")
         self.setStyleSheet("background-color: black;")
-
-
 
         self.center()
         self.show()

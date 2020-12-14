@@ -9,7 +9,7 @@ from GameWindow import GameWindow
 
 
 class SettingsWindow(QMainWindow):
-        SettingsWindowH =500
+        SettingsWindowH =600
         SettingsWindowW =800
 
         def __init__(self, mainwind):  # Here we initialize MainWindow class
@@ -24,9 +24,11 @@ class SettingsWindow(QMainWindow):
             self.setWindowIcon(QIcon('resources/icon.png'))
             self.spin = QSpinBox(self)
             self.spin.setGeometry(350, 100, 100, 40)
+            self.spin.setMinimum(2)
+            self.spin.setMaximum(4)
             self.spin.valueChanged.connect(self.show_result)
             self.spin.setStyleSheet("background-color: lightgreen; border:2px solid blue;")
-            #self.label = QLabel(self)
+
             self.label_1 = QLabel('Number of players', self)
             self.label_1.setFont(QFont('Calibri', 10))
             self.label_1.move(320, 80)
@@ -35,9 +37,11 @@ class SettingsWindow(QMainWindow):
 
             self.spin_2 = QSpinBox(self)
             self.spin_2.setGeometry(350, 200, 100, 40)
+            self.spin_2.setMinimum(1)
+            self.spin_2.setMaximum(4)
             self.spin_2.valueChanged.connect(self.show_result_2)
             self.spin_2.setStyleSheet("background-color: lightgreen; border:2px solid blue;")
-            # self.label = QLabel(self)
+
             self.label_2 = QLabel('Number of snakes', self)
             self.label_2.setFont(QFont('Calibri', 10))
             self.label_2.move(320, 180)
@@ -51,7 +55,7 @@ class SettingsWindow(QMainWindow):
             self.continueButton.setGeometry(275, 340, 250, 50)
             self.continueButton.setCursor(Qt.PointingHandCursor)
             self.continueButton.released.connect(self.run)
-
+            self.center()
             # show all the widgets
             self.show()
 
@@ -59,14 +63,18 @@ class SettingsWindow(QMainWindow):
             # getting current value
             value = self.spin.value()
             # setting value of spin box to the label
-           #self.label.setText("Value : " + str(value))
+
+        def center(self):
+            screen = QDesktopWidget().screenGeometry()  # Here we take our full screen geometry
+            size = self.geometry()  # Here we take our app geometry
+            self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
 
         def show_result_2(self):
             # getting current value
             value = self.spin_2.value()
 
         def run(self):
-            #print("Run Run")
+            # print("Run Run")
             self.gameWindow = GameWindow(self)
             self.hide()
 

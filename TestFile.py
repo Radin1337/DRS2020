@@ -5,27 +5,25 @@ from PyQt5.QtGui import QPixmap
 import sys
 
 
-class Example(QWidget):
+class UIGameMode(QWidget):
+    def __init__(self, parent=None):
+        super(UIGameMode, self).__init__(parent)
+        self.initGameModeButtons()
 
-    def __init__(self):
-        super().__init__()
+    def initGameModeButtons(self):
 
-        self.initUI()
+        self.singlePlayerButton = QtWidgets.QPushButton("", self)
+        self.startButton.setStyleSheet(
+            "border:2px solid blue; color: " "blue;font-size: 27px; font-family: Calibri; "
+            "background-image: url(resources/SPButton.jpg);")
+        self.singlePlayerButton.setGeometry(275, 500, 250, 50)
+        self.singlePlayerButton.released.connect(self.run)
 
-    def initUI(self):
-        hbox = QHBoxLayout(self)
-        pixmap = QPixmap("resources/topimage.jpg")
-
-        lbl = QLabel(self)
-        lbl.setPixmap(pixmap)
-
-        hbox.addWidget(lbl)
-        self.setLayout(hbox)
-
-        self.move(100, 100)
-        self.setWindowTitle('First Rock')
-        self.show()
-
+# noinspection PyMethodMayBeStatic
+    def run(self):
+        # print("Run Run")
+        self.settings = SettingsWindow(self)
+        self.hide()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
