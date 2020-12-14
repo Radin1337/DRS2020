@@ -1,6 +1,8 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from Models.Food import Food
+
 import random
 import sys
 
@@ -13,7 +15,11 @@ class GameWindow(QMainWindow):
     def __init__(self, settingswind):
         super(GameWindow, self).__init__()
         # adding board as a central widget
+        self.Food = []
+        self.InitFood()
+        self.initUI()
 
+    def initUI(self):
         # setting title to the window
         self.setWindowTitle('Game window')
         self.setMinimumHeight(self.GameWindowH)
@@ -37,3 +43,10 @@ class GameWindow(QMainWindow):
         screen = QDesktopWidget().screenGeometry()  # Here we take our full screen geometry
         size = self.geometry()  # Here we take our app geometry
         self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
+
+    def InitFood(self):
+        self.Food.append(Food(self, 1))
+
+
+
+
