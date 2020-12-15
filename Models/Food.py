@@ -15,9 +15,6 @@ class Food(QFrame):
     def __init__(self, parent, id):
         super().__init__(parent)
 
-        self.drop_food(parent, id)
-
-    def drop_food(self, parent, id):
         self.x = random.randint(0, 560)
         self.y = random.randint(0, 560)
         self.Label = QLabel(parent)
@@ -25,3 +22,4 @@ class Food(QFrame):
         PixmapResized = Pixmap.scaled(40, 40)
         self.Label.setPixmap(PixmapResized)
         self.Label.move(self.x, self.y)
+
