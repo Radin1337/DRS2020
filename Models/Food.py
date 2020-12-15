@@ -1,25 +1,20 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+from Models.Block import Block,BlockType
 import random
 import sys
 
 
-class Food(QFrame):
+class Food(Block):
     x = 0
     y = 0
     picture = 'resources/food.png'
     deactivateFood = pyqtSignal()
     activateFood = pyqtSignal()
 
-    def __init__(self, parent, id):
-        super().__init__(parent)
+    def __init__(self, parent):
+        super().__init__(parent.x,parent.y)
+        parent.BType = BlockType.Food
 
-        self.x = random.randint(0, 560)
-        self.y = random.randint(0, 560)
-        self.Label = QLabel(parent)
-        Pixmap = QPixmap('resources/food.png')
-        PixmapResized = Pixmap.scaled(40, 40)
-        self.Label.setPixmap(PixmapResized)
-        self.Label.move(self.x, self.y)
 

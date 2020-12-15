@@ -2,7 +2,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
 from Models.Food import  Food
-
+from Models.Block import Block, BlockType
 import random
 import sys
 
@@ -14,11 +14,6 @@ class GameWindow(QMainWindow):
 
     def __init__(self, settingswind):
         super(GameWindow, self).__init__()
-
-        self.board = Board(self)
-        self.setCentralWidget(self.board)
-
-        self.board.start()
 
         # setting geometry to the window
         # screen = QDesktopWidget().screenGeometry()
@@ -37,55 +32,42 @@ class GameWindow(QMainWindow):
         self.setMaximumWidth(self.GameWindowW)
         self.setWindowTitle('Game window')
 
-        self.show()
-
-
-        # setting title to the window
-        # adding board as a central widget
-
-    def center(self):
-        screen = QDesktopWidget().screenGeometry()  # Here we take our full screen geometry
-        size = self.geometry()  # Here we take our app geometry
-        self.move(int((screen.width() - size.width()) / 2), int((screen.height() - size.height()) / 2))
-
-
-class Board(QFrame):
-    BoardWidth = 40
-    BoardHeight = 40
-    Mls = 500
-
-    def __init__(self, parent):
-        super(Board, self).__init__(parent)
-
-        self.timerFood = QBasicTimer()
-
         self.Food = []
 
-        self.board = []
+        vb = QVBoxLayout()
+        w = QWidget()
+        hb = QHBoxLayout()
 
-        self.InitFood()
+        self.whoIsPlayingLabel = QLabel()
+        self.whoIsPlayingLabel.setText("Playing: Player 1")
+        self.whoIsPlayingLabel.setAlignment(Qt.AlignHCenter)
+        vb.addWidget(self.whoIsPlayingLabel)
 
-        self.setFocusPolicy(Qt.StrongFocus)
+        hb.addLayout(vb)
+        self.grid = QGridLayout()
 
-    def start(self):
-        self.timerFood.start(2000, self)
+        hb.addLayout(self.grid)
+        w.setLayout(hb)
+        w.layout().setContentsMargins(0, 0, 0, 0)
+        w.layout().setSpacing(0)
+        self.setCentralWidget(w)
+        self.timer = QBasicTimer()
+        self.timer.start(200, self)
+        self.init_map()
 
-    # Timer event method will be triggered by our own created timer
+        self.show()
+
+    def init_map(self):
+        # Add positions to the map
+        for x in range(0, 16):
+            for y in range(0, 15):
+                w = Block(y, x)
+                self.grid.addWidget(w, y, x)
+
+    # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
-        if event.timerId() == self.timerFood.timerId():
-            self.ShowNextFood()
-
-    def InitFood(self):
-
-        for i in range(5):
-            self.Food.append(Food(self,i))
-
-        for i in range(4):
-            self.Food[i+1].Label.setVisible(False)
-
-    def ShowNextFood(self):
-        for i in range(5):
-            if not self.Food[i].Label.isVisible():
-                self.Food[i].Label.setVisible(True)
-                break
-
+        if event.timerId() == self.timer.timerId():
+            x, y = random.randint(0, 16 - 1), random.randint(0, 15 - 1)
+            w = self.grid.itemAtPosition(y, x).widget()
+            self.Food.append(Food(w))
+            self.update()

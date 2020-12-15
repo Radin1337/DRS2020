@@ -168,8 +168,8 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.Start" />
-        <item itemvalue="Python.TestFile" />
         <item itemvalue="Python.GameWindow" />
+        <item itemvalue="Python.TestFile" />
         <item itemvalue="Python.GameMode" />
         <item itemvalue="Python.Settings" />
       </list>
@@ -232,41 +232,45 @@
     </state>
     <state x="-1180" y="294" key="FileChooserDialogImpl/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1607772096108" />
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607977391287" />
-    <state width="1877" height="363" key="GridCell.Tab.0.bottom" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="192" key="GridCell.Tab.0.bottom" timestamp="1608028255424">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1607772169314" />
+    <state width="1877" height="192" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255424" />
     <state width="1877" height="363" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
-    <state width="1877" height="363" key="GridCell.Tab.0.center" timestamp="1607990262906">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="192" key="GridCell.Tab.0.center" timestamp="1608028255424">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1607772169314" />
+    <state width="1877" height="192" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255424" />
     <state width="1877" height="363" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262906" />
-    <state width="1877" height="363" key="GridCell.Tab.0.left" timestamp="1607990262906">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="192" key="GridCell.Tab.0.left" timestamp="1608028255424">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1607772169314" />
+    <state width="1877" height="192" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255424" />
     <state width="1877" height="363" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262906" />
-    <state width="1877" height="363" key="GridCell.Tab.0.right" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="192" key="GridCell.Tab.0.right" timestamp="1608028255424">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
-    <state width="1877" height="295" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1607772169314" />
+    <state width="1877" height="192" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255424" />
     <state width="1877" height="363" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
-    <state width="1877" height="363" key="GridCell.Tab.1.bottom" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="363" key="GridCell.Tab.1.bottom" timestamp="1608028255421">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
+    <state width="1877" height="363" key="GridCell.Tab.1.bottom/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255421" />
     <state width="1877" height="363" key="GridCell.Tab.1.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
-    <state width="1877" height="363" key="GridCell.Tab.1.center" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="363" key="GridCell.Tab.1.center" timestamp="1608028255421">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
+    <state width="1877" height="363" key="GridCell.Tab.1.center/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255421" />
     <state width="1877" height="363" key="GridCell.Tab.1.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
-    <state width="1877" height="363" key="GridCell.Tab.1.left" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="363" key="GridCell.Tab.1.left" timestamp="1608028255421">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
+    <state width="1877" height="363" key="GridCell.Tab.1.left/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255421" />
     <state width="1877" height="363" key="GridCell.Tab.1.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
-    <state width="1877" height="363" key="GridCell.Tab.1.right" timestamp="1607990262907">
-      <screen x="0" y="0" width="1920" height="1080" />
+    <state width="1877" height="363" key="GridCell.Tab.1.right" timestamp="1608028255421">
+      <screen x="-1920" y="0" width="1920" height="1080" />
     </state>
+    <state width="1877" height="363" key="GridCell.Tab.1.right/0.0.1920.1080/-1920.0.1920.1080@-1920.0.1920.1080" timestamp="1608028255421" />
     <state width="1877" height="363" key="GridCell.Tab.1.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1607990262907" />
     <state x="-1644" y="0" width="1526" height="847" maximized="true" key="dock-window-1" timestamp="1607988374769">
       <screen x="-1920" y="0" width="1920" height="1080" />
@@ -279,13 +283,6 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/GameWindow.py</url>
-          <line>86</line>
-          <option name="timeStamp" value="14" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
           <properties notifyOnTerminate="true" exception="BaseException">
@@ -296,10 +293,10 @@
     </breakpoint-manager>
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DRS2020$Start.coverage" NAME="Start Coverage Results" MODIFIED="1607990244105" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DRS2020$Start.coverage" NAME="Start Coverage Results" MODIFIED="1608028092832" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DRS2020$Settings.coverage" NAME="Settings Coverage Results" MODIFIED="1607955231706" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DRS2020$GameMode.coverage" NAME="GameMode Coverage Results" MODIFIED="1607955884920" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/DRS2020$TestFile.coverage" NAME="TestFile Coverage Results" MODIFIED="1607984591804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DRS2020$GameWindow.coverage" NAME="GameWindow Coverage Results" MODIFIED="1607982103869" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/DRS2020$GameWindow.coverage" NAME="GameWindow Coverage Results" MODIFIED="1608022751920" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
