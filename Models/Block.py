@@ -39,7 +39,14 @@ class Block(QWidget):
 
         if self.BType == BlockType.Food:
             p.drawPixmap(r, QPixmap(QImage("resources/food.png")))
-
+        elif self.BType == BlockType.Head:
+            p.drawPixmap(r, QPixmap(QImage("resources/head.png")))
+        elif self.BType == BlockType.Body:
+            p.drawPixmap(r, QPixmap(QImage("resources/body.png")))
+        elif self.BType == BlockType.Tail:
+            p.drawPixmap(r, QPixmap(QImage("resources/tail.png")))
+        elif self.BType == BlockType.CurvedBody:
+            p.drawPixmap(r, QPixmap(QImage("resources/curvedbody.png")))
 
 
 class BlockType(enum.IntEnum):
@@ -47,5 +54,6 @@ class BlockType(enum.IntEnum):
     EmptyBlock = 0
     Head = 1
     Body = 2
-    Tail = 3
-    Food = 4
+    CurvedBody = 3
+    Tail = 4
+    Food = 5

@@ -1,7 +1,7 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
-from Models.Block import Block,BlockType
+from Models.Block import Block, BlockType
 import random
 import sys
 
@@ -14,7 +14,5 @@ class Food(Block):
     activateFood = pyqtSignal()
 
     def __init__(self, parent):
-        super().__init__(parent.x,parent.y)
+        super().__init__(parent.x, parent.y)
         parent.BType = BlockType.Food
-
-
