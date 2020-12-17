@@ -18,6 +18,7 @@ class Block(QWidget):
         self.x = x
         self.y = y
         self.BType = BlockType.EmptyBlock
+        self.RDegrees = RotateDegrees.Right
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -38,15 +39,22 @@ class Block(QWidget):
         outer, inner = Qt.gray, Qt.lightGray
 
         if self.BType == BlockType.Food:
-            p.drawPixmap(r, QPixmap(QImage("resources/food.png")))
+            p.drawPixmap(r, self.rotate_picture("resources/food.png"))
         elif self.BType == BlockType.Head:
-            p.drawPixmap(r, QPixmap(QImage("resources/head.png")))
+            p.drawPixmap(r, self.rotate_picture("resources/head.png"))
         elif self.BType == BlockType.Body:
-            p.drawPixmap(r, QPixmap(QImage("resources/body.png")))
+            p.drawPixmap(r, self.rotate_picture("resources/body.png"))
         elif self.BType == BlockType.Tail:
-            p.drawPixmap(r, QPixmap(QImage("resources/tail.png")))
+            p.drawPixmap(r, self.rotate_picture("resources/tail.png"))
         elif self.BType == BlockType.CurvedBody:
-            p.drawPixmap(r, QPixmap(QImage("resources/curvedbody.png")))
+            p.drawPixmap(r, self.rotate_picture("resources/curvedbody.png"))
+
+    def rotate_picture(self, path):
+        picture = QPixmap(QImage(path))
+        transform = QTransform().rotate(self.RDegrees)
+        picture = picture.transformed(transform)
+
+        return picture
 
 
 class BlockType(enum.IntEnum):
@@ -57,3 +65,10 @@ class BlockType(enum.IntEnum):
     CurvedBody = 3
     Tail = 4
     Food = 5
+
+
+class RotateDegrees(enum.IntEnum):
+    Right = 0
+    Down = 90
+    Left = 180
+    Up = 270

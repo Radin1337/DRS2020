@@ -38,7 +38,6 @@ class GameModeWindow(QMainWindow):
 
         self.show()
 
-
     def center(self):
         screen = QDesktopWidget().screenGeometry()  # Here we take our full screen geometry
         size = self.geometry()  # Here we take our app geometry

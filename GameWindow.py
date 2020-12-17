@@ -35,7 +35,6 @@ class GameWindow(QMainWindow):
         self.setWindowTitle('Game window')
 
         self.Food = []
-        self.Snake = Snake()
         self.Snakes = []
 
         vb = QVBoxLayout()
@@ -59,7 +58,7 @@ class GameWindow(QMainWindow):
         self.timer.start(2000, self)
 
         self.init_map()
-        self.init_snake()
+        self.init_snakes()
         self.show()
 
     def init_map(self):
@@ -77,21 +76,14 @@ class GameWindow(QMainWindow):
             self.Food.append(Food(w))
             self.update()
 
-    def init_snake(self):
-        position1 = self.grid.itemAtPosition(0, 2).widget()
-        h = Head(position1)
-        position2 = self.grid.itemAtPosition(0, 1).widget()
-        b = Body(position2)
-        position3 = self.grid.itemAtPosition(0, 0).widget()
-        t = Tail(position3)
-        self.Snake.head = h
-        self.Snake.body.append(b)
-        self.Snake.tail = t
-        self.Snakes.append(self.Snake)
+    def init_snakes(self):
+        s = Snake()
+        s.init_snake(self.grid)
+        self.Snakes.append(s)
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
-        self.clear_block(self.Snake.tail.x, self.Snake.tail.y)
+        self.clear_block(self.Snakes[0].tail.x, self.Snakes[0].tail.y)
 
         if e.key() == Qt.Key_Up:
             self.Snakes[0].move(self.grid, 'u')
