@@ -61,6 +61,7 @@ class Snake:
 
         body_pos = grid.itemAtPosition(self.head.last_pos_x, self.head.last_pos_y).widget()
 
+
         if direction == 'u':
             head_pos = grid.itemAtPosition(x-1, y).widget()
             self.head = Head(head_pos, RotateDegrees.Up)

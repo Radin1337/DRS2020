@@ -2,6 +2,8 @@ import time
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
+
+
 from Models.Food import Food
 from Models.Snake import *
 from Models.Block import Block, BlockType
@@ -86,15 +88,36 @@ class GameWindow(QMainWindow):
         self.clear_block(self.Snakes[0].tail.x, self.Snakes[0].tail.y)
 
         if e.key() == Qt.Key_Up:
-            self.Snakes[0].move(self.grid, 'u')
+            if self.Snakes[0].head.x == 0:
+                print("Game over")
+
+                # self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
+            else:
+                self.Snakes[0].move(self.grid, 'u')
         if e.key() == Qt.Key_Down:
-            self.Snakes[0].move(self.grid, 'd')
+            if self.Snakes[0].head.x == 14:
+                print("Game over")
+                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
+            else:
+                self.Snakes[0].move(self.grid, 'd')
         if e.key() == Qt.Key_Left:
-            self.Snakes[0].move(self.grid, 'l')
+            if self.Snakes[0].head.y == 0:
+                print("Game over")
+                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
+            else:
+                self.Snakes[0].move(self.grid, 'l')
         if e.key() == Qt.Key_Right:
-            self.Snakes[0].move(self.grid, 'r')
+            if self.Snakes[0].head.y == 14:
+                print("Game over")
+                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
+            else:
+                self.Snakes[0].move(self.grid, 'r')
 
         self.update()
+        print("current x: ")
+        print(self.Snakes[0].head.x)
+        print("current y: ")
+        print(self.Snakes[0].head.y)
         time.sleep(0.05)
 
     def clear_block(self, x, y):
