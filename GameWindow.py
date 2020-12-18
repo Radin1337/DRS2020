@@ -75,7 +75,7 @@ class GameWindow(QMainWindow):
         if event.timerId() == self.timer.timerId():
             x, y = random.randint(0, 14), random.randint(0, 14)
             w = self.grid.itemAtPosition(x, y).widget()
-            self.Food.append(Food(w))
+            #self.Food.append(Food(w))
             self.update()
 
     def init_snakes(self):
@@ -85,42 +85,56 @@ class GameWindow(QMainWindow):
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
-        self.clear_block(self.Snakes[0].tail.x, self.Snakes[0].tail.y)
 
-        if e.key() == Qt.Key_Up:
-            if self.Snakes[0].head.x == 0:
-                print("Game over")
 
-                # self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
-            else:
-                self.Snakes[0].move(self.grid, 'u')
-        if e.key() == Qt.Key_Down:
-            if self.Snakes[0].head.x == 14:
-                print("Game over")
-                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
-            else:
-                self.Snakes[0].move(self.grid, 'd')
-        if e.key() == Qt.Key_Left:
-            if self.Snakes[0].head.y == 0:
-                print("Game over")
-                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
-            else:
-                self.Snakes[0].move(self.grid, 'l')
-        if e.key() == Qt.Key_Right:
-            if self.Snakes[0].head.y == 14:
-                print("Game over")
-                self.clear_block(self.Snakes[0].head.x, self.Snakes[0].head.y)
-            else:
-                self.Snakes[0].move(self.grid, 'r')
+        ##If statement that checks length of snake list is just for testing and not breaking the app it will change in future
+
+        if len(self.Snakes) != 0:
+
+            clean_block = self.grid.itemAtPosition(self.Snakes[0].tail.x, self.Snakes[0].tail.y).widget()
+            clean_block.BType = BlockType.EmptyBlock
+
+            if e.key() == Qt.Key_Up:
+                if self.Snakes[0].head.x == 0:
+                    print("Game over")
+                    self.clear_snake(0)
+                else:
+                    self.Snakes[0].move(self.grid, 'u')
+            if e.key() == Qt.Key_Down:
+                if self.Snakes[0].head.x == 14:
+                    print("Game over")
+                    self.clear_snake(0)
+                else:
+                    self.Snakes[0].move(self.grid, 'd')
+            if e.key() == Qt.Key_Left:
+                if self.Snakes[0].head.y == 0:
+                    print("Game over")
+                    self.clear_snake(0)
+                else:
+                    self.Snakes[0].move(self.grid, 'l')
+            if e.key() == Qt.Key_Right:
+                if self.Snakes[0].head.y == 14:
+                    print("Game over")
+                    self.clear_snake(0)
+                else:
+                    self.Snakes[0].move(self.grid, 'r')
 
         self.update()
-        print("current x: ")
+        """print("current x: ")
         print(self.Snakes[0].head.x)
         print("current y: ")
-        print(self.Snakes[0].head.y)
+        print(self.Snakes[0].head.y)"""
         time.sleep(0.05)
 
-    def clear_block(self, x, y):
-        blk = Block(x, y)
-        self.grid.removeWidget(self.grid.itemAtPosition(x, y).widget())
-        self.grid.addWidget(blk, x, y)
+    def clear_snake(self, snake_id):
+        snake = self.Snakes[snake_id]
+        block = self.grid.itemAtPosition(snake.head.x,snake.head.y).widget()
+        block.BType = BlockType.EmptyBlock
+        block = self.grid.itemAtPosition(snake.tail.x, snake.tail.y).widget()
+        block.BType = BlockType.EmptyBlock
+
+        for bodypart in snake.body:
+            block = self.grid.itemAtPosition(bodypart.x,bodypart.y).widget()
+            block.BType = BlockType.EmptyBlock
+
+        self.Snakes.remove(self.Snakes[snake_id])
