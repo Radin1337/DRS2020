@@ -5,6 +5,8 @@ from Models.Block import Block, BlockType
 import random
 import sys
 
+from DRS2020.Models.Block import RotateDegrees
+
 
 class Food(Block):
     x = 0
@@ -16,3 +18,4 @@ class Food(Block):
     def __init__(self, parent):
         super().__init__(parent.x, parent.y)
         parent.BType = BlockType.Food
+        parent.RDegrees = RotateDegrees.Right

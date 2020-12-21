@@ -80,7 +80,7 @@ class GameWindow(QMainWindow):
         self.update()
 
     def drop_food(self):
-        x, y = random.randint(0, 14), random.randint(0, 14)
+        x, y = random.randint(0, 1), random.randint(0, 5)
         snake = self.Snakes[0]
         if(snake.head.x == x and snake.head.y == y) or (snake.tail.x == x and snake.tail.y == y):
             self.drop_food()
