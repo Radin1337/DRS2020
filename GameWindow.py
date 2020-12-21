@@ -80,7 +80,7 @@ class GameWindow(QMainWindow):
         self.update()
 
     def drop_food(self):
-        x, y = random.randint(0, 1), random.randint(0, 5)
+        x, y = random.randint(0, 14), random.randint(0, 14)
         snake = self.Snakes[0]
         if(snake.head.x == x and snake.head.y == y) or (snake.tail.x == x and snake.tail.y == y):
             self.drop_food()
@@ -99,7 +99,6 @@ class GameWindow(QMainWindow):
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
-
         ##If statement that checks length of snake list is just for testing and not breaking the app it will change in future
 
         if len(self.Snakes) != 0:
@@ -113,30 +112,30 @@ class GameWindow(QMainWindow):
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'u')
+                    self.eat_food()
             if e.key() == Qt.Key_Down:
                 if self.Snakes[0].head.x == 14:
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'd')
+                    self.eat_food()
             if e.key() == Qt.Key_Left:
                 if self.Snakes[0].head.y == 0:
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'l')
+                    self.eat_food()
             if e.key() == Qt.Key_Right:
                 if self.Snakes[0].head.y == 14:
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'r')
+                    self.eat_food()
 
         self.update()
-        """print("current x: ")
-        print(self.Snakes[0].head.x)
-        print("current y: ")
-        print(self.Snakes[0].head.y)"""
         time.sleep(0.05)
 
     def clear_snake(self, snake_id):
@@ -151,3 +150,8 @@ class GameWindow(QMainWindow):
             block.BType = BlockType.EmptyBlock
 
         self.Snakes.remove(self.Snakes[snake_id])
+
+    def eat_food(self):
+        for i, val in enumerate(self.Food):
+            if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
+                self.Food.remove(self.Food[i])
