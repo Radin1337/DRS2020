@@ -12,6 +12,9 @@ import sys
 
 
 # creating game window
+from DRS2020.Models.Snake import Snake
+
+
 class GameWindow(QMainWindow):
     GameWindowH = 600
     GameWindowW = 800
@@ -73,10 +76,21 @@ class GameWindow(QMainWindow):
     # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
-            x, y = random.randint(0, 14), random.randint(0, 14)
-            w = self.grid.itemAtPosition(x, y).widget()
-            #self.Food.append(Food(w))
-            self.update()
+            self.drop_food()
+        self.update()
+
+    def drop_food(self):
+        x, y = random.randint(0, 14), random.randint(0, 14)
+        snake = self.Snakes[0]
+        if(snake.head.x == x and snake.head.y == y) or (snake.tail.x == x and snake.tail.y == y):
+            self.drop_food()
+        else:
+            for bodypart in snake.body:
+                if bodypart.x == x and bodypart.y == y:
+                    self.drop_food()
+                else:
+                    w = self.grid.itemAtPosition(x, y).widget()
+                    self.Food.append(Food(w))
 
     def init_snakes(self):
         s = Snake()
@@ -85,7 +99,6 @@ class GameWindow(QMainWindow):
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
-
 
         ##If statement that checks length of snake list is just for testing and not breaking the app it will change in future
 
@@ -128,13 +141,13 @@ class GameWindow(QMainWindow):
 
     def clear_snake(self, snake_id):
         snake = self.Snakes[snake_id]
-        block = self.grid.itemAtPosition(snake.head.x,snake.head.y).widget()
+        block = self.grid.itemAtPosition(snake.head.x, snake.head.y).widget()
         block.BType = BlockType.EmptyBlock
         block = self.grid.itemAtPosition(snake.tail.x, snake.tail.y).widget()
         block.BType = BlockType.EmptyBlock
 
         for bodypart in snake.body:
-            block = self.grid.itemAtPosition(bodypart.x,bodypart.y).widget()
+            block = self.grid.itemAtPosition(bodypart.x, bodypart.y).widget()
             block.BType = BlockType.EmptyBlock
 
         self.Snakes.remove(self.Snakes[snake_id])
