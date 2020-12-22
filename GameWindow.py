@@ -105,36 +105,53 @@ class GameWindow(QMainWindow):
 
             clean_block = self.grid.itemAtPosition(self.Snakes[0].tail.x, self.Snakes[0].tail.y).widget()
             clean_block.BType = BlockType.EmptyBlock
+            # print(self.Snakes[0].last_move)
 
             if e.key() == Qt.Key_Up:
                 if self.Snakes[0].head.x == 0:
                     print("Game over")
                     self.clear_snake(0)
-
+                elif self.Snakes[0].last_move == 'd':
+                    print("Game over")
+                    self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'u')
                     self.eat_food()
+                    self.Snakes[0].last_move = 'u'
+
             if e.key() == Qt.Key_Down:
                 if self.Snakes[0].head.x == 14:
+                    print("Game over")
+                    self.clear_snake(0)
+                elif self.Snakes[0].last_move == 'u':
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'd')
                     self.eat_food()
+                    self.Snakes[0].last_move = 'd'
             if e.key() == Qt.Key_Left:
                 if self.Snakes[0].head.y == 0:
+                    print("Game over")
+                    self.clear_snake(0)
+                elif self.Snakes[0].last_move == 'r':
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'l')
                     self.eat_food()
+                    self.Snakes[0].last_move = 'l'
             if e.key() == Qt.Key_Right:
                 if self.Snakes[0].head.y == 14:
+                    print("Game over")
+                    self.clear_snake(0)
+                elif self.Snakes[0].last_move == 'l':
                     print("Game over")
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'r')
                     self.eat_food()
+                    self.Snakes[0].last_move = 'r'
 
         self.update()
         time.sleep(0.05)

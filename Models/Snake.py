@@ -45,7 +45,8 @@ class Snake:
         self.body = []
         self.tail = None
         self.eat = 0
-        
+        self.last_move = 'right'
+
     def move(self, grid, direction):
         x = self.head.last_pos_x
         y = self.head.last_pos_y
