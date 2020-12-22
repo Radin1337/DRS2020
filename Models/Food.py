@@ -5,7 +5,7 @@ from Models.Block import Block, BlockType
 import random
 import sys
 
-from DRS2020.Models.Block import RotateDegrees
+from Models.Block import RotateDegrees
 
 
 class Food(Block):

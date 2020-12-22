@@ -44,11 +44,20 @@ class Snake:
         self.head = None
         self.body = []
         self.tail = None
-
+        self.eat = 0
+        
     def move(self, grid, direction):
         x = self.head.last_pos_x
         y = self.head.last_pos_y
         d = self.head.degree
+
+        # Dodaje novi blok sa telom jedan blok iza glave
+        # Poveca telo posle svakih n poteza (n = trenutna duzina tela)
+        # Nekad se rep ne rotira kako treba u trenutku povecavanja
+        if self.eat == 1:
+            new_pos = grid.itemAtPosition(self.head.last_pos_x, self.head.last_pos_y).widget()
+            self.body.append(Body(new_pos))
+            self.eat = 0
 
         tail_pos = grid.itemAtPosition(self.body[0].last_pos_x,
                                        self.body[0].last_pos_y).widget()
@@ -82,12 +91,15 @@ class Snake:
             elif xdif == 0 and ydif == 1:
                 tail_degree = 180
 
+
+
         for i in range(0, len(self.body)-1):
             body_pos = grid.itemAtPosition(self.body[i+1].last_pos_x,
                                            self.body[i+1].last_pos_y).widget()
             self.body[i] = Body(body_pos, self.body[i+1].degree, self.body[i+1].BlkType)
 
         body_pos = grid.itemAtPosition(self.head.last_pos_x, self.head.last_pos_y).widget()
+
 
         if direction == 'u':
             head_pos = grid.itemAtPosition(x-1, y).widget()
@@ -138,3 +150,9 @@ class Snake:
         self.tail = Tail(tail_pos)
 
         return self
+
+    def body_increase(self, grid):
+        # new_body_pos = grid.ItemAtPosition(5, 5).widget()
+        # self.body.append(Body(new_body_pos))
+        print("EAT")
+        self.eat = 1

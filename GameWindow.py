@@ -12,7 +12,7 @@ import sys
 
 
 # creating game window
-from DRS2020.Models.Snake import Snake
+from Models.Snake import Snake
 
 
 class GameWindow(QMainWindow):
@@ -110,6 +110,7 @@ class GameWindow(QMainWindow):
                 if self.Snakes[0].head.x == 0:
                     print("Game over")
                     self.clear_snake(0)
+
                 else:
                     self.Snakes[0].move(self.grid, 'u')
                     self.eat_food()
@@ -155,3 +156,4 @@ class GameWindow(QMainWindow):
         for i, val in enumerate(self.Food):
             if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
                 self.Food.remove(self.Food[i])
+                self.Snakes[0].body_increase(self.grid)
