@@ -140,6 +140,10 @@ class GameWindow(QMainWindow):
                     self.eat_food()
                     self.Snakes[0].last_move = 'd'
             if e.key() == Qt.Key_Left:
+                for i in range(0, len(self.Snakes[0].body) - 1):
+                    if self.Snakes[0].head.y == self.Snakes[0].body[i].y + 1:
+                        print("Game over")
+                        self.clear_snake(0)
                 if self.Snakes[0].head.y == 0:
                     print("Game over")
                     self.clear_snake(0)
@@ -151,6 +155,10 @@ class GameWindow(QMainWindow):
                     self.eat_food()
                     self.Snakes[0].last_move = 'l'
             if e.key() == Qt.Key_Right:
+                for i in range(0, len(self.Snakes[0].body) - 1):
+                    if self.Snakes[0].head.y == self.Snakes[0].body[i].y - 1:
+                        print("Game over")
+                        self.clear_snake(0)
                 if self.Snakes[0].head.y == 14:
                     print("Game over")
                     self.clear_snake(0)
