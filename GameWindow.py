@@ -99,7 +99,7 @@ class GameWindow(QMainWindow):
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
-        ##If statement that checks length of snake list is just for testing and not breaking the app it will change in future
+        # If statement that checks length of snake list is just for testing and not breaking the app it will change in future
 
         if len(self.Snakes) != 0:
 
@@ -108,6 +108,10 @@ class GameWindow(QMainWindow):
             # print(self.Snakes[0].last_move)
 
             if e.key() == Qt.Key_Up:
+                for i in range(0, len(self.Snakes[0].body) - 1):
+                    if self.Snakes[0].head.x == self.Snakes[0].body[i].x + 1:
+                        print("Game over")
+                        self.clear_snake(0)
                 if self.Snakes[0].head.x == 0:
                     print("Game over")
                     self.clear_snake(0)
@@ -117,9 +121,14 @@ class GameWindow(QMainWindow):
                 else:
                     self.Snakes[0].move(self.grid, 'u')
                     self.eat_food()
+
                     self.Snakes[0].last_move = 'u'
 
             if e.key() == Qt.Key_Down:
+                for i in range(0, len(self.Snakes[0].body) - 1):
+                    if self.Snakes[0].head.x == self.Snakes[0].body[i].x - 1:
+                        print("Game over")
+                        self.clear_snake(0)
                 if self.Snakes[0].head.x == 14:
                     print("Game over")
                     self.clear_snake(0)
