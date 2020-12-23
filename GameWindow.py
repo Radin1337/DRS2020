@@ -103,8 +103,8 @@ class GameWindow(QMainWindow):
 
         if len(self.Snakes) != 0:
 
-            clean_block = self.grid.itemAtPosition(self.Snakes[0].tail.x, self.Snakes[0].tail.y).widget()
-            clean_block.BType = BlockType.EmptyBlock
+            #clean_block = self.grid.itemAtPosition(self.Snakes[0].tail.x, self.Snakes[0].tail.y).widget()
+            #clean_block.BType = BlockType.EmptyBlock
             # print(self.Snakes[0].last_move)
 
             if e.key() == Qt.Key_Up:
@@ -187,6 +187,7 @@ class GameWindow(QMainWindow):
         self.Snakes.remove(self.Snakes[snake_id])
 
     def eat_food(self):
+        # ovo radi, ali bukvalno nemam reci
         for i, val in enumerate(self.Food):
             if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
                 self.Food.remove(self.Food[i])
