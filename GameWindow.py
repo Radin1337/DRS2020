@@ -74,6 +74,10 @@ class GameWindow(QMainWindow):
         self.init_snakes()
 
         self.Food = []
+        self.Snakes = []
+
+        for i in range(numberOfPlayers):
+            self.Snakes.extend(self.Players["id"+str(i+1)])
 
         self.in_queue_eatfood = Queue()
         self.out_queue_eatfood = Queue()
@@ -139,23 +143,11 @@ class GameWindow(QMainWindow):
                 self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'r')
 
             if self.Players[self.ListOfPlayers[0]][0].head is None:
+                self.Snakes.remove(self.Snakes[0])
                 self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
 
         self.update()
         time.sleep(0.05)
-
-    def clear_snake(self, snake_id):
-        snake = self.Snakes[snake_id]
-        block = self.grid.itemAtPosition(snake.head.x, snake.head.y).widget()
-        block.BType = BlockType.EmptyBlock
-        block = self.grid.itemAtPosition(snake.tail.x, snake.tail.y).widget()
-        block.BType = BlockType.EmptyBlock
-
-        for bodypart in snake.body:
-            block = self.grid.itemAtPosition(bodypart.x, bodypart.y).widget()
-            block.BType = BlockType.EmptyBlock
-
-        self.Snakes.remove(self.Snakes[snake_id])
 
     @pyqtSlot()
     def receive_from_eatfood_worker(self):
