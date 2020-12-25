@@ -113,7 +113,7 @@ class GameWindow(QMainWindow):
             if e.key() == Qt.Key_Up:
                 for i in range(0, len(self.Snakes[0].body) - 1):
                     # promenjen uslov zbog kog je pucala igra pri nekim pokretima
-                    if self.Snakes[0].head.x == self.Snakes[0].body[i].x + 1:
+                    if (self.Snakes[0].head.x == self.Snakes[0].body[i].x + 1) and (self.Snakes[0].head.y == self.Snakes[0].body[i].y):
                         print("Game over")
                         self.clear_snake(0)
                 if self.Snakes[0].head.x == 0:
@@ -130,7 +130,7 @@ class GameWindow(QMainWindow):
 
             if e.key() == Qt.Key_Down:
                 for i in range(0, len(self.Snakes[0].body) - 1):
-                    if self.Snakes[0].head.x == self.Snakes[0].body[i].x - 1:
+                    if (self.Snakes[0].head.x == self.Snakes[0].body[i].x - 1) and (self.Snakes[0].head.y == self.Snakes[0].body[i].y):
                         print("Game over")
                         self.clear_snake(0)
                 if self.Snakes[0].head.x == 14:
@@ -145,7 +145,7 @@ class GameWindow(QMainWindow):
                     self.Snakes[0].last_move = 'd'
             if e.key() == Qt.Key_Left:
                 for i in range(0, len(self.Snakes[0].body) - 1):
-                    if self.Snakes[0].head.y == self.Snakes[0].body[i].y + 1:
+                    if (self.Snakes[0].head.y == self.Snakes[0].body[i].y + 1) and (self.Snakes[0].head.x == self.Snakes[0].body[i].x):
                         print("Game over")
                         self.clear_snake(0)
                 if self.Snakes[0].head.y == 0:
@@ -160,7 +160,7 @@ class GameWindow(QMainWindow):
                     self.Snakes[0].last_move = 'l'
             if e.key() == Qt.Key_Right:
                 for i in range(0, len(self.Snakes[0].body) - 1):
-                    if self.Snakes[0].head.y == self.Snakes[0].body[i].y - 1:
+                    if (self.Snakes[0].head.y == self.Snakes[0].body[i].y - 1) and (self.Snakes[0].head.x == self.Snakes[0].body[i].x):
                         print("Game over")
                         self.clear_snake(0)
                 if self.Snakes[0].head.y == 14:
