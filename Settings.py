@@ -24,7 +24,7 @@ class SettingsWindow(QMainWindow):
             self.setWindowIcon(QIcon('resources/icon.png'))
             self.spin = QSpinBox(self)
             self.spin.setGeometry(350, 100, 100, 40)
-            self.spin.setMinimum(2)
+            self.spin.setMinimum(1)#promenio sam vrednost na 1, radi testiranja
             self.spin.setMaximum(4)
             self.spin.valueChanged.connect(self.show_result)
             self.spin.setStyleSheet("background-color: lightgreen; border:2px solid blue;")
@@ -36,12 +36,12 @@ class SettingsWindow(QMainWindow):
             self.label_1.setStyleSheet("background-color: lightgreen; ")
 
             self.numberOfSnakes = 1
-            self.numberOfPlayers = 1
+            self.numberOfPlayers = 1 #ovde ce biti vrednost 2 kada zavrsimo program, jer su minimum 2 igraca
 
             self.spin_2 = QSpinBox(self)
             self.spin_2.setGeometry(350, 200, 100, 40)
             self.spin_2.setMinimum(1)
-            self.spin_2.setMaximum(4)
+            self.spin_2.setMaximum(3)
             self.spin_2.valueChanged.connect(self.show_result_2)
             self.spin_2.setStyleSheet("background-color: lightgreen; border:2px solid blue;")
 
@@ -78,7 +78,7 @@ class SettingsWindow(QMainWindow):
 
         def run(self):
             # print("Run Run")
-            self.gameWindow = GameWindow(self, self.numberOfSnakes)
+            self.gameWindow = GameWindow(self.numberOfPlayers, self.numberOfSnakes)
             self.hide()
 
 

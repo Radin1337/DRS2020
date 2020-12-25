@@ -12,8 +12,6 @@ class Head(Block):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = BlockType.Head
         parent.RDegrees = moved
-        self.last_pos_x = parent.x
-        self.last_pos_y = parent.y
         self.degree = parent.RDegrees
 
 
@@ -22,8 +20,6 @@ class Body(Block):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = blk
         parent.RDegrees = moved
-        self.last_pos_x = parent.x
-        self.last_pos_y = parent.y
         self.degree = parent.RDegrees
         self.BlkType = parent.BType
 
@@ -34,8 +30,6 @@ class Tail(Block):
         parent.BType = BlockType.Tail
         self.BType = BlockType.Tail
         parent.RDegrees = moved
-        self.last_pos_x = parent.x
-        self.last_pos_y = parent.y
         self.degree = parent.RDegrees
 
 
@@ -45,8 +39,7 @@ class Snake:
         self.body = []
         self.tail = None
         self.eat = 0
-        # Ovde kazes right, a u gameWindow proveravas 'r'
-        self.last_move = 'right'
+        self.last_move = 'r'
 
     def move(self, grid, direction):
         # Smestamo postojece delove tela u lokalne promenljive
@@ -59,30 +52,59 @@ class Snake:
 
         # Proveravamo smer kretanja zmije i shodno tome menjamo poziciju glave
         # -------------------------------------
-        # Bolja preglednost koda sa x/y, verovatno ce doci do izmene naziva u samim klasama
-        x = saved_head.last_pos_x
-        y = saved_head.last_pos_y
+        # Bolja preglednost koda sa x/y
+        x = saved_head.x
+        y = saved_head.y
         # -------------------------------------
 
         if direction == 'u':
-            # Proveriti da li je glava druge zmije na "grid.itemAtPosition(x-1, y).widget()", ako jeste sta cemo?
+            # Da li je zmija glavom "udarila u zid"
+            if x == 0:
+                self.kill_snake(grid)
+                return
             new_head_position = grid.itemAtPosition(x - 1, y).widget()
+            # Da li zmija moze da se pomeri u tom smeru
+            if not self.possible_move(new_head_position, 'd'):
+                return
+            # Da li je zmija presla preko nekog tela/repa
+            if self.should_kill(new_head_position):
+                self.kill_snake(grid)
+                return
             self.head = Head(new_head_position, RotateDegrees.Up)
         elif direction == 'd':
-            # Proveriti da li je glava druge zmije na "grid.itemAtPosition(x-1, y).widget()", ako jeste sta cemo?
+            if x == 14:
+                self.kill_snake(grid)
+                return
             new_head_position = grid.itemAtPosition(x + 1, y).widget()
+            if not self.possible_move(new_head_position, 'u'):
+                return
+            if self.should_kill(new_head_position):
+                self.kill_snake(grid)
+                return
             self.head = Head(new_head_position, RotateDegrees.Down)
         elif direction == 'l':
-            # Proveriti da li je glava druge zmije na "grid.itemAtPosition(x-1, y).widget()", ako jeste sta cemo?
+            if y == 0:
+                self.kill_snake(grid)
+                return
             new_head_position = grid.itemAtPosition(x, y - 1).widget()
+            if not self.possible_move(new_head_position, 'r'):
+                return
+            if self.should_kill(new_head_position):
+                self.kill_snake(grid)
+                return
             self.head = Head(new_head_position, RotateDegrees.Left)
         elif direction == 'r':
-            # Proveriti da li je glava druge zmije na "grid.itemAtPosition(x-1, y).widget()", ako jeste sta cemo?
+            if y == 14:
+                self.kill_snake(grid)
+                return
             new_head_position = grid.itemAtPosition(x, y + 1).widget()
+            if not self.possible_move(new_head_position, 'l'):
+                return
+            if self.should_kill(new_head_position):
+                self.kill_snake(grid)
+                return
             self.head = Head(new_head_position)
 
-        # Ovde se mogu potencijalno testirati uslovi za kraj igre
-        # 1. funckija - glava van table, 2. funckija - glava se nalazi gde je i telo/rep BILO KOJE zmije
 
         # Cuvamo vrednosti opet zbog bolje preglednosti dalje
         old_degree = saved_head.degree
@@ -103,8 +125,8 @@ class Snake:
             self.eat = 0
         else:
             for i in range(0, len(self.body) - 1):
-                new_body_position = grid.itemAtPosition(self.body[i + 1].last_pos_x,
-                                                        self.body[i + 1].last_pos_y).widget()
+                new_body_position = grid.itemAtPosition(self.body[i + 1].x,
+                                                        self.body[i + 1].y).widget()
                 self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType)
 
             new_body_position = grid.itemAtPosition(x, y).widget()
@@ -116,25 +138,57 @@ class Snake:
             self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type)
 
             # Odredjujemo novu poziciju  repa
-            new_tail_position = grid.itemAtPosition(saved_body[0].last_pos_x, saved_body[0].last_pos_y).widget()
+            new_tail_position = grid.itemAtPosition(saved_body[0].x, saved_body[0].y).widget()
             tail_degree = self.tail_rotation(saved_body, saved_head, saved_tail)
             self.tail = Tail(new_tail_position, tail_degree)
 
             # Brisemo stari rep
-            clean_block = grid.itemAtPosition(saved_tail.last_pos_x, saved_tail.last_pos_y).widget()
+            clean_block = grid.itemAtPosition(saved_tail.x, saved_tail.y).widget()
             clean_block.BType = BlockType.EmptyBlock
+
+        self.last_move = direction
+
+    def possible_move(self, block, not_possible):
+        if block.BType == BlockType.Head:
+            return False
+        elif self.last_move == not_possible:
+            return False
+        else:
+            return True
+
+    def kill_snake(self, grid):
+        block = grid.itemAtPosition(self.head.x, self.head.y).widget()
+        block.BType = BlockType.EmptyBlock
+        block = grid.itemAtPosition(self.tail.x, self.tail.y).widget()
+        block.BType = BlockType.EmptyBlock
+
+        for bodyPart in self.body:
+            block = grid.itemAtPosition(bodyPart.x, bodyPart.y).widget()
+            block.BType = BlockType.EmptyBlock
+
+        self.head = None
+        self.body = []
+        self.tail = None
+
+    @staticmethod
+    def should_kill(block):
+        if block.BType == BlockType.Body or \
+           block.BType == BlockType.CurvedBody or \
+           block.BType == BlockType.Tail:
+            return True
+        return False
 
     @staticmethod
     def tail_rotation(saved_body, saved_head, saved_tail):
         if saved_body[0].BlkType == BlockType.CurvedBody:
-            xclanak = saved_body[0].last_pos_x
-            yclanak = saved_body[0].last_pos_y
+            xclanak = saved_body[0].x
+            yclanak = saved_body[0].y
             if len(saved_body) > 1:
-                xtelo = saved_body[1].last_pos_x
-                ytelo = saved_body[1].last_pos_y
+                xtelo = saved_body[1].x
+                ytelo = saved_body[1].y
             else:
-                xtelo = saved_head.last_pos_x
-                ytelo = saved_head.last_pos_y
+                xtelo = saved_head.x
+                ytelo = saved_head.y
             xdif = xclanak - xtelo
             ydif = yclanak - ytelo
 
@@ -160,115 +214,33 @@ class Snake:
                 (old_degree == RotateDegrees.Up and new_degree == RotateDegrees.Right):
             return old_degree
         else:
+            if old_degree + 90 > 270:
+                return RotateDegrees.Right
             return old_degree + 90
 
-    """x = self.head.last_pos_x
-        y = self.head.last_pos_y
-        d = self.head.degree
-
-        # Dodaje novi blok sa telom jedan blok iza glave
-        # Poveca telo posle svakih n poteza (n = trenutna duzina tela)
-        # Nekad se rep ne rotira kako treba u trenutku povecavanja
-        if self.eat == 1:
-            new_pos = grid.itemAtPosition(self.head.last_pos_x, self.head.last_pos_y).widget()
-            self.body.append(Body(new_pos))
-            self.eat = 0
-
-        tail_pos = grid.itemAtPosition(self.body[0].last_pos_x,
-                                       self.body[0].last_pos_y).widget()
-        xclanak = self.body[0].last_pos_x
-        yclanak = self.body[0].last_pos_y
-        if len(self.body) > 1:
-            xtelo = self.body[1].last_pos_x
-            ytelo = self.body[1].last_pos_y
+    def init_snake(self, grid, player_id, snake_id):
+        need_to_rotate = RotateDegrees.Right
+        if player_id == "id1":
+            head_position = grid.itemAtPosition(0 + snake_id, 2).widget()
+            body_position = grid.itemAtPosition(0 + snake_id, 1).widget()
+            tail_position = grid.itemAtPosition(0 + snake_id, 0).widget()
+        elif player_id == "id2":
+            head_position = grid.itemAtPosition(0 + snake_id, 12).widget()
+            body_position = grid.itemAtPosition(0 + snake_id, 13).widget()
+            tail_position = grid.itemAtPosition(0 + snake_id, 14).widget()
+            need_to_rotate = RotateDegrees.Left
+        elif player_id == "id3":
+            head_position = grid.itemAtPosition(14 - snake_id, 2).widget()
+            body_position = grid.itemAtPosition(14 - snake_id, 1).widget()
+            tail_position = grid.itemAtPosition(14 - snake_id, 0).widget()
         else:
-            xtelo = self.head.last_pos_x
-            ytelo = self.head.last_pos_y
-        xdif = xclanak - xtelo
-        ydif = yclanak - ytelo
+            head_position = grid.itemAtPosition(14 - snake_id, 12).widget()
+            body_position = grid.itemAtPosition(14 - snake_id, 13).widget()
+            tail_position = grid.itemAtPosition(14 - snake_id, 14).widget()
+            need_to_rotate = RotateDegrees.Left
 
-        tail_degree = self.tail.degree
-        rotirati_rep = False
-
-        if self.body[0].BlkType == BlockType.CurvedBody:
-            rotirati_rep = True
-
-            # telo levo od clanka
-            if xdif == 1 and ydif == 0:
-                tail_degree = 270
-            # telo desno od clanka
-            elif xdif == -1 and ydif == 0:
-                tail_degree = 90
-            # telo ispod clanka
-            elif xdif == 0 and ydif == -1:
-                tail_degree = 0
-            # telo iznad clanka
-            elif xdif == 0 and ydif == 1:
-                tail_degree = 180
-
-
-
-        for i in range(0, len(self.body)-1):
-            body_pos = grid.itemAtPosition(self.body[i+1].last_pos_x,
-                                           self.body[i+1].last_pos_y).widget()
-            self.body[i] = Body(body_pos, self.body[i+1].degree, self.body[i+1].BlkType)
-
-        body_pos = grid.itemAtPosition(self.head.last_pos_x, self.head.last_pos_y).widget()
-
-
-        if direction == 'u':
-            head_pos = grid.itemAtPosition(x-1, y).widget()
-            self.head = Head(head_pos, RotateDegrees.Up)
-            self.check_deg_diff(d, body_pos)
-
-        elif direction == 'd':
-            head_pos = grid.itemAtPosition(x+1, y).widget()
-            self.head = Head(head_pos, RotateDegrees.Down)
-            self.check_deg_diff(d, body_pos)
-
-        elif direction == 'l':
-            head_pos = grid.itemAtPosition(x, y-1).widget()
-            self.head = Head(head_pos, RotateDegrees.Left)
-            self.check_deg_diff(d, body_pos)
-
-        elif direction == 'r':
-            head_pos = grid.itemAtPosition(x, y+1).widget()
-            self.head = Head(head_pos)
-            self.check_deg_diff(d, body_pos)
-
-        self.tail = Tail(tail_pos, tail_degree)
-
-
-    def check_deg_diff(self, d, body_pos):
-        if d != self.head.degree:
-            if (d == RotateDegrees.Right and self.head.degree == RotateDegrees.Down) or \
-               (d == RotateDegrees.Down and self.head.degree == RotateDegrees.Left) or \
-               (d == RotateDegrees.Left and self.head.degree == RotateDegrees.Up) or \
-               (d == RotateDegrees.Up and self.head.degree == RotateDegrees.Right):
-                self.body[len(self.body) - 1] = Body(body_pos, d, BlockType.CurvedBody)
-            else:
-                self.body[len(self.body) - 1] = Body(body_pos, d+90, BlockType.CurvedBody)
-        else:
-            self.body[len(self.body) - 1] = Body(body_pos, d)"""
-
-    def init_snake(self, grid, x):
-        head_pos = grid.itemAtPosition(x, 2).widget()
-        """body_pos1 = grid.itemAtPosition(0, 3).widget()
-        body_pos2 = grid.itemAtPosition(0, 2).widget()"""
-        body_pos3 = grid.itemAtPosition(x, 1).widget()
-        tail_pos = grid.itemAtPosition(x, 0).widget()
-
-        self.head = Head(head_pos)
-        self.body.append(Body(body_pos3))
-        """self.body.append(Body(body_pos2))
-        self.body.append(Body(body_pos1))"""
-        self.tail = Tail(tail_pos)
+        self.head = Head(head_position, need_to_rotate)
+        self.body.append(Body(body_position, need_to_rotate))
+        self.tail = Tail(tail_position, need_to_rotate)
 
         return self
-
-    # Cemu ovo u kodu blago meni?
-    def body_increase(self, grid):
-        # new_body_pos = grid.ItemAtPosition(5, 5).widget()
-        # self.body.append(Body(new_body_pos))
-        print("EAT")
-        self.eat = 1
