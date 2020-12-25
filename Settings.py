@@ -35,6 +35,9 @@ class SettingsWindow(QMainWindow):
             self.label_1.resize(165, 20)
             self.label_1.setStyleSheet("background-color: lightgreen; ")
 
+            self.numberOfSnakes = 1
+            self.numberOfPlayers = 1
+
             self.spin_2 = QSpinBox(self)
             self.spin_2.setGeometry(350, 200, 100, 40)
             self.spin_2.setMinimum(1)
@@ -61,7 +64,7 @@ class SettingsWindow(QMainWindow):
 
         def show_result(self):
             # getting current value
-            value = self.spin.value()
+            self.numberOfPlayers = self.spin.value()
             # setting value of spin box to the label
 
         def center(self):
@@ -71,11 +74,11 @@ class SettingsWindow(QMainWindow):
 
         def show_result_2(self):
             # getting current value
-            value = self.spin_2.value()
+            self.numberOfSnakes = self.spin_2.value()
 
         def run(self):
             # print("Run Run")
-            self.gameWindow = GameWindow(self)
+            self.gameWindow = GameWindow(self, self.numberOfSnakes)
             self.hide()
 
 

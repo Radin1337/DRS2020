@@ -251,12 +251,12 @@ class Snake:
         else:
             self.body[len(self.body) - 1] = Body(body_pos, d)"""
 
-    def init_snake(self, grid):
-        head_pos = grid.itemAtPosition(0, 2).widget()
+    def init_snake(self, grid, x):
+        head_pos = grid.itemAtPosition(x, 2).widget()
         """body_pos1 = grid.itemAtPosition(0, 3).widget()
         body_pos2 = grid.itemAtPosition(0, 2).widget()"""
-        body_pos3 = grid.itemAtPosition(0, 1).widget()
-        tail_pos = grid.itemAtPosition(0, 0).widget()
+        body_pos3 = grid.itemAtPosition(x, 1).widget()
+        tail_pos = grid.itemAtPosition(x, 0).widget()
 
         self.head = Head(head_pos)
         self.body.append(Body(body_pos3))

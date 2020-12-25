@@ -19,7 +19,7 @@ class GameWindow(QMainWindow):
     GameWindowH = 600
     GameWindowW = 800
 
-    def __init__(self, settingswind):
+    def __init__(self, settingswind, numberOfSnakes):
         super(GameWindow, self).__init__()
 
         # setting geometry to the window
@@ -41,6 +41,8 @@ class GameWindow(QMainWindow):
 
         self.Food = []
         self.Snakes = []
+
+        self.numOfSnakes = numberOfSnakes
 
         vb = QVBoxLayout()
         w = QWidget()
@@ -93,9 +95,10 @@ class GameWindow(QMainWindow):
                     self.Food.append(Food(w))
 
     def init_snakes(self):
-        s = Snake()
-        s.init_snake(self.grid)
-        self.Snakes.append(s)
+        for i in range(0, self.numOfSnakes):
+            s = Snake()
+            s.init_snake(self.grid, i)
+            self.Snakes.append(s)
         self.update()
 
     def keyPressEvent(self, e: QKeyEvent):
@@ -109,6 +112,7 @@ class GameWindow(QMainWindow):
 
             if e.key() == Qt.Key_Up:
                 for i in range(0, len(self.Snakes[0].body) - 1):
+                    # promenjen uslov zbog kog je pucala igra pri nekim pokretima
                     if self.Snakes[0].head.x == self.Snakes[0].body[i].x + 1:
                         print("Game over")
                         self.clear_snake(0)
