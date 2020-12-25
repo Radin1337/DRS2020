@@ -19,8 +19,11 @@ class GameWindow(QMainWindow):
     GameWindowH = 600
     GameWindowW = 800
 
-    def __init__(self, settingswind, numberOfSnakes):
+    def __init__(self, numberOfPlayers, numberOfSnakes):
         super(GameWindow, self).__init__()
+
+        self.numOfPlayers = numberOfPlayers
+        self.numOfSnakes = numberOfSnakes
 
         # setting geometry to the window
         # screen = QDesktopWidget().screenGeometry()
@@ -38,11 +41,6 @@ class GameWindow(QMainWindow):
         self.setMaximumHeight(self.GameWindowH)
         self.setMaximumWidth(self.GameWindowW)
         self.setWindowTitle('Game window')
-
-        self.Food = []
-        self.Snakes = []
-
-        self.numOfSnakes = numberOfSnakes
 
         vb = QVBoxLayout()
         w = QWidget()
@@ -62,10 +60,20 @@ class GameWindow(QMainWindow):
         w.layout().setSpacing(0)
         self.setCentralWidget(w)
         self.timer = QBasicTimer()
-        self.timer.start(200, self)
+        self.timer.start(5000, self)
 
         self.init_map()
+
+        self.ListOfPlayers = []
+        self.init_players()
+
+        self.Players = {PlayerID: [] for PlayerID in self.ListOfPlayers}
         self.init_snakes()
+
+        self.Food = []
+
+        #self.SnakeOnMove = self.Players[self.ListOfPlayers[player_id]][snake_id]
+
         self.show()
 
     def init_map(self):
@@ -74,6 +82,18 @@ class GameWindow(QMainWindow):
             for y in range(0, 15):
                 w = Block(x, y)
                 self.grid.addWidget(w, x, y)
+
+    def init_players(self):
+        for i in range(0, self.numOfPlayers):
+            self.ListOfPlayers.append("id" + str(i + 1))
+
+    def init_snakes(self):
+        for player_id, snakes in self.Players.items():
+            for snake_id in range(0, self.numOfSnakes):
+                s = Snake()
+                s.init_snake(self.grid, player_id, snake_id)
+                snakes.append(s)
+        self.update()
 
     # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
@@ -90,104 +110,30 @@ class GameWindow(QMainWindow):
         else:
             self.drop_food()
 
-    def init_snakes(self):
-        for i in range(0, self.numOfSnakes):
-            s = Snake()
-            s.init_snake(self.grid, i)
-            self.Snakes.append(s)
-        self.update()
-
     def keyPressEvent(self, e: QKeyEvent):
         # If statement that checks length of snake list is just for testing and not breaking the app it will change in future
-
-        if len(self.Snakes) != 0:
-
-            #clean_block = self.grid.itemAtPosition(self.Snakes[0].tail.x, self.Snakes[0].tail.y).widget()
-            #clean_block.BType = BlockType.EmptyBlock
-            # print(self.Snakes[0].last_move)
+        if len(self.Players[self.ListOfPlayers[0]]) != 0:
 
             if e.key() == Qt.Key_Up:
-                for i in range(0, len(self.Snakes[0].body) - 1):
-                    # promenjen uslov zbog kog je pucala igra pri nekim pokretima
-                    if (self.Snakes[0].head.x == self.Snakes[0].body[i].x + 1) and (self.Snakes[0].head.y == self.Snakes[0].body[i].y):
-                        print("Game over")
-                        self.clear_snake(0)
-                if self.Snakes[0].head.x == 0:
-                    print("Game over")
-                    self.clear_snake(0)
-                elif self.Snakes[0].last_move == 'd':
-                    print("Game over")
-                    self.clear_snake(0)
-                else:
-                    self.Snakes[0].move(self.grid, 'u')
-                    self.eat_food()
+                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'u')
+            elif e.key() == Qt.Key_Down:
+                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'd')
+            elif e.key() == Qt.Key_Left:
+                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'l')
+            elif e.key() == Qt.Key_Right:
+                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'r')
 
-                    self.Snakes[0].last_move = 'u'
-
-            if e.key() == Qt.Key_Down:
-                for i in range(0, len(self.Snakes[0].body) - 1):
-                    if (self.Snakes[0].head.x == self.Snakes[0].body[i].x - 1) and (self.Snakes[0].head.y == self.Snakes[0].body[i].y):
-                        print("Game over")
-                        self.clear_snake(0)
-                if self.Snakes[0].head.x == 14:
-                    print("Game over")
-                    self.clear_snake(0)
-                elif self.Snakes[0].last_move == 'u':
-                    print("Game over")
-                    self.clear_snake(0)
-                else:
-                    self.Snakes[0].move(self.grid, 'd')
-                    self.eat_food()
-                    self.Snakes[0].last_move = 'd'
-            if e.key() == Qt.Key_Left:
-                for i in range(0, len(self.Snakes[0].body) - 1):
-                    if (self.Snakes[0].head.y == self.Snakes[0].body[i].y + 1) and (self.Snakes[0].head.x == self.Snakes[0].body[i].x):
-                        print("Game over")
-                        self.clear_snake(0)
-                if self.Snakes[0].head.y == 0:
-                    print("Game over")
-                    self.clear_snake(0)
-                elif self.Snakes[0].last_move == 'r':
-                    print("Game over")
-                    self.clear_snake(0)
-                else:
-                    self.Snakes[0].move(self.grid, 'l')
-                    self.eat_food()
-                    self.Snakes[0].last_move = 'l'
-            if e.key() == Qt.Key_Right:
-                for i in range(0, len(self.Snakes[0].body) - 1):
-                    if (self.Snakes[0].head.y == self.Snakes[0].body[i].y - 1) and (self.Snakes[0].head.x == self.Snakes[0].body[i].x):
-                        print("Game over")
-                        self.clear_snake(0)
-                if self.Snakes[0].head.y == 14:
-                    print("Game over")
-                    self.clear_snake(0)
-                elif self.Snakes[0].last_move == 'l':
-                    print("Game over")
-                    self.clear_snake(0)
-                else:
-                    self.Snakes[0].move(self.grid, 'r')
-                    self.eat_food()
-                    self.Snakes[0].last_move = 'r'
+            if self.Players[self.ListOfPlayers[0]][0].head is None:
+                self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
+            else:
+                self.eat_food()
 
         self.update()
         time.sleep(0.05)
 
-    def clear_snake(self, snake_id):
-        snake = self.Snakes[snake_id]
-        block = self.grid.itemAtPosition(snake.head.x, snake.head.y).widget()
-        block.BType = BlockType.EmptyBlock
-        block = self.grid.itemAtPosition(snake.tail.x, snake.tail.y).widget()
-        block.BType = BlockType.EmptyBlock
-
-        for bodypart in snake.body:
-            block = self.grid.itemAtPosition(bodypart.x, bodypart.y).widget()
-            block.BType = BlockType.EmptyBlock
-
-        self.Snakes.remove(self.Snakes[snake_id])
-
     def eat_food(self):
         for i, val in enumerate(self.Food):
-            if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
+            if self.Players[self.ListOfPlayers[0]][0].head.x == self.Food[i].x and \
+             self.Players[self.ListOfPlayers[0]][0].head.y == self.Food[i].y:
                 self.Food.remove(self.Food[i])
-                self.Snakes[0].body_increase(self.grid)
+                self.Players[self.ListOfPlayers[0]][0].eat = 1

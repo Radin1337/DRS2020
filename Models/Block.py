@@ -51,7 +51,7 @@ class Block(QWidget):
 
     def rotate_picture(self, path):
         picture = QPixmap(QImage(path))
-        transform = QTransform().rotate(self.RDegrees)
+        transform = QTransform().rotate(float(self.RDegrees))
         picture = picture.transformed(transform)
 
         return picture
