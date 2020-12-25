@@ -28,7 +28,7 @@ class WorkerEatFood(Worker):
                         break
                 for s in self.snakes:
                     if s.head.x == ret[2] and s.head.y == ret[3]:
-                        s.body_increase(self.grid)
+                        s.eat = 1
                         break
                 self.update.emit()
 
