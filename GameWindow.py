@@ -62,7 +62,7 @@ class GameWindow(QMainWindow):
         w.layout().setSpacing(0)
         self.setCentralWidget(w)
         self.timer = QBasicTimer()
-        self.timer.start(2000, self)
+        self.timer.start(200, self)
 
         self.init_map()
         self.init_snakes()
@@ -83,16 +83,12 @@ class GameWindow(QMainWindow):
 
     def drop_food(self):
         x, y = random.randint(0, 14), random.randint(0, 14)
-        snake = self.Snakes[0]
-        if(snake.head.x == x and snake.head.y == y) or (snake.tail.x == x and snake.tail.y == y):
-            self.drop_food()
+        b = self.grid.itemAtPosition(x, y).widget()
+
+        if b.BType == BlockType.EmptyBlock:
+            self.Food.append(Food(b))
         else:
-            for bodypart in snake.body:
-                if bodypart.x == x and bodypart.y == y:
-                    self.drop_food()
-                else:
-                    w = self.grid.itemAtPosition(x, y).widget()
-                    self.Food.append(Food(w))
+            self.drop_food()
 
     def init_snakes(self):
         for i in range(0, self.numOfSnakes):
@@ -191,7 +187,6 @@ class GameWindow(QMainWindow):
         self.Snakes.remove(self.Snakes[snake_id])
 
     def eat_food(self):
-        # ovo radi, ali bukvalno nemam reci
         for i, val in enumerate(self.Food):
             if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
                 self.Food.remove(self.Food[i])
