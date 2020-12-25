@@ -65,7 +65,7 @@ class GameWindow(QMainWindow):
         w.layout().setSpacing(0)
         self.setCentralWidget(w)
         self.timer = QBasicTimer()
-        self.timer.start(200, self)
+        self.timer.start(2000, self)
 
         self.init_map()
         self.init_snakes()
@@ -76,10 +76,11 @@ class GameWindow(QMainWindow):
         self.EatFoodProcess = ProcessEatFood(self.in_queue_eatfood, self.out_queue_eatfood)
         self.EatFoodProcess.start()
 
-        self.eatFoodWorker = WorkerEatFood(self.Food, self.Snakes, self.in_queue_eatfood, self.out_queue_eatfood)
+        self.eatFoodWorker = WorkerEatFood(self.Food, self.Snakes, self.in_queue_eatfood, self.out_queue_eatfood, self.grid)
         self.eatFoodWorker.update.connect(self.receive_from_eatfood_worker)
         self.eatFoodWorker.start()
-
+        self.signalCounter = 0
+        
         self.show()
 
     def init_map(self):
@@ -200,17 +201,12 @@ class GameWindow(QMainWindow):
 
         self.Snakes.remove(self.Snakes[snake_id])
 
-    def eat_food(self):
-        for i, val in enumerate(self.Food):
-            if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
-                self.Food.remove(self.Food[i])
-                self.Snakes[0].body_increase(self.grid)
-
-    @pyqtSlot(list)
-    def receive_from_eatfood_worker(self, crd):
-
-        f = self.grid.itemAtPosition(crd[0], crd[1]).widget()
-        self.Food.remove(f)
-        self.Snakes[0].body_increase(self.grid)
-
-
+    @pyqtSlot()
+    def receive_from_eatfood_worker(self):
+        print("Signal received ")
+        print(self.signalCounter)
+        
+        # self.Snakes[0].body_increase(self.grid)
+        print("\n Food count ")
+        print(len(self.Food))
+        self.signalCounter = self.signalCounter +1

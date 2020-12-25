@@ -6,12 +6,13 @@ from Models.Food import Food
 
 
 class WorkerEatFood(Worker):
-    def __init__(self, food, snakes, in_q: mp.Queue, out_q: mp.Queue):
+    def __init__(self, food, snakes, in_q: mp.Queue, out_q: mp.Queue, grid):
         super().__init__()
         self.in_q = in_q
         self.out_q = out_q
         self.snakes = snakes
         self.food = food
+        self.grid = grid
 
     def work(self):
         while True:
@@ -21,7 +22,17 @@ class WorkerEatFood(Worker):
 
             ret = self.out_q.get()
             if ret[0] != -1:
-                for f in range(len(self.food)):
-                    self.update.emit([ret[0], ret[1]])
+                for f in self.food:
+                    if f.x == ret[0] and f.y == ret[1]:
+                        self.food.remove(f)
+                        break
+                for s in self.snakes:
+                    if s.head.x == ret[2] and s.head.y == ret[3]:
+                        s.body_increase(self.grid)
+                        break
+                self.update.emit()
+
+                while not self.out_q.empty():
+                    self.out_q.get()
 
             time.sleep(0.001)

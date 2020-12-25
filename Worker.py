@@ -3,7 +3,7 @@ from PyQt5.QtCore import QThread, QObject, pyqtSignal, pyqtSlot
 
 class Worker(QObject):
     finished = pyqtSignal()
-    update = pyqtSignal(list)
+    update = pyqtSignal()
 
     def __init__(self):
         super().__init__()
