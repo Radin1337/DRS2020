@@ -13,7 +13,10 @@ import sys
 
 # creating game window
 from Models.Snake import Snake
-
+from Worker import Worker
+from WorkerEatFood import WorkerEatFood
+from multiprocessing import Queue
+from ProcessEatFood import ProcessEatFood
 
 class GameWindow(QMainWindow):
     GameWindowH = 600
@@ -66,6 +69,17 @@ class GameWindow(QMainWindow):
 
         self.init_map()
         self.init_snakes()
+
+        self.in_queue_eatfood = Queue()
+        self.out_queue_eatfood = Queue()
+
+        self.EatFoodProcess = ProcessEatFood(self.in_queue_eatfood, self.out_queue_eatfood)
+        self.EatFoodProcess.start()
+
+        self.eatFoodWorker = WorkerEatFood(self.Food, self.Snakes, self.in_queue_eatfood, self.out_queue_eatfood)
+        self.eatFoodWorker.update.connect(self.receive_from_eatfood_worker)
+        self.eatFoodWorker.start()
+
         self.show()
 
     def init_map(self):
@@ -120,7 +134,7 @@ class GameWindow(QMainWindow):
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'u')
-                    self.eat_food()
+                    # self.eat_food()
 
                     self.Snakes[0].last_move = 'u'
 
@@ -137,7 +151,7 @@ class GameWindow(QMainWindow):
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'd')
-                    self.eat_food()
+                    # self.eat_food()
                     self.Snakes[0].last_move = 'd'
             if e.key() == Qt.Key_Left:
                 for i in range(0, len(self.Snakes[0].body) - 1):
@@ -152,7 +166,7 @@ class GameWindow(QMainWindow):
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'l')
-                    self.eat_food()
+                    # self.eat_food()
                     self.Snakes[0].last_move = 'l'
             if e.key() == Qt.Key_Right:
                 for i in range(0, len(self.Snakes[0].body) - 1):
@@ -167,7 +181,7 @@ class GameWindow(QMainWindow):
                     self.clear_snake(0)
                 else:
                     self.Snakes[0].move(self.grid, 'r')
-                    self.eat_food()
+                    # self.eat_food()
                     self.Snakes[0].last_move = 'r'
 
         self.update()
@@ -191,3 +205,12 @@ class GameWindow(QMainWindow):
             if self.Snakes[0].head.x == self.Food[i].x and self.Snakes[0].head.y == self.Food[i].y:
                 self.Food.remove(self.Food[i])
                 self.Snakes[0].body_increase(self.grid)
+
+    @pyqtSlot(list)
+    def receive_from_eatfood_worker(self, crd):
+
+        f = self.grid.itemAtPosition(crd[0], crd[1]).widget()
+        self.Food.remove(f)
+        self.Snakes[0].body_increase(self.grid)
+
+
