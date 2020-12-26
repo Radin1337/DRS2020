@@ -17,6 +17,8 @@ from Worker import Worker
 from WorkerEatFood import WorkerEatFood
 from multiprocessing import Queue
 from ProcessEatFood import ProcessEatFood
+from CollisionWorker import CollisionWorker
+from CollisionProcess import CollisionProcess
 
 class GameWindow(QMainWindow):
     GameWindowH = 600
@@ -89,9 +91,20 @@ class GameWindow(QMainWindow):
         self.eatFoodWorker.update.connect(self.receive_from_eatfood_worker)
         self.eatFoodWorker.start()
         self.signalCounter = 0
-        
-    
-        #self.SnakeOnMove = self.Players[self.ListOfPlayers[player_id]][snake_id]
+
+        self.SnakeOnMove = self.Players[self.ListOfPlayers[0]][0]
+        self.KeyStrokes = []
+        # Setting up process and worker to check up on collisions
+        self.in_queue_collision = Queue()
+        self.out_queue_collision = Queue()
+
+        self.CollisionProcess = CollisionProcess(self.in_queue_collision, self.out_queue_collision)
+        self.CollisionProcess.start()
+
+        self.CollisionWorker = CollisionWorker(self.SnakeOnMove, self.grid, self.KeyStrokes, self.Snakes, self.in_queue_collision, self.out_queue_collision)
+        self.CollisionWorker.update.connect(self.receive_from_collision_worker)
+        self.CollisionWorker.start()
+        self.signalFromCollision = 0
 
         self.show()
 
@@ -130,24 +143,9 @@ class GameWindow(QMainWindow):
             self.drop_food()
 
     def keyPressEvent(self, e: QKeyEvent):
-        # If statement that checks length of snake list is just for testing and not breaking the app it will change in future
         if len(self.Players[self.ListOfPlayers[0]]) != 0:
-
-            if e.key() == Qt.Key_Up:
-                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'u')
-            elif e.key() == Qt.Key_Down:
-                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'd')
-            elif e.key() == Qt.Key_Left:
-                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'l')
-            elif e.key() == Qt.Key_Right:
-                self.Players[self.ListOfPlayers[0]][0].move(self.grid, 'r')
-
-            if self.Players[self.ListOfPlayers[0]][0].head is None:
-                self.Snakes.remove(self.Snakes[0])
-                self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
-
-        self.update()
-        time.sleep(0.05)
+            self.KeyStrokes.append(e.key())
+            time.sleep(0.05)
 
     @pyqtSlot()
     def receive_from_eatfood_worker(self):
@@ -158,3 +156,18 @@ class GameWindow(QMainWindow):
         print("\n Food count ")
         print(len(self.Food))
         self.signalCounter = self.signalCounter +1
+
+    @pyqtSlot()
+    def receive_from_collision_worker(self):
+        print("Signal from collision worker recieved")
+        if len(self.Players[self.ListOfPlayers[0]]) != 0:
+            if self.Players[self.ListOfPlayers[0]][0].killed == False: 
+                self.Players[self.ListOfPlayers[0]][0] = self.SnakeOnMove
+            else:
+                self.Snakes.remove(self.Players[self.ListOfPlayers[0]][0])
+                self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
+                    
+        self.update()
+        print(self.signalFromCollision)
+        self.signalFromCollision = self.signalFromCollision + 1
+        

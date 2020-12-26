@@ -40,10 +40,10 @@ class Snake:
         self.tail = None
         self.eat = 0
         self.last_move = 'r'
+        self.killed = False
 
-    def move(self, grid, direction):
+    def move(self, grid, direction):           
         # Smestamo postojece delove tela u lokalne promenljive
-
         saved_head = self.head
         saved_body = []
         for i in range(0, len(self.body)):
@@ -55,56 +55,27 @@ class Snake:
         # Bolja preglednost koda sa x/y
         x = saved_head.x
         y = saved_head.y
-        # -------------------------------------
-
+        # ------------------------------------- 
         if direction == 'u':
-            # Da li je zmija glavom "udarila u zid"
-            if x == 0:
-                self.kill_snake(grid)
-                return
             new_head_position = grid.itemAtPosition(x - 1, y).widget()
-            # Da li zmija moze da se pomeri u tom smeru
             if not self.possible_move(new_head_position, 'd'):
-                return
-            # Da li je zmija presla preko nekog tela/repa
-            if self.should_kill(new_head_position):
-                self.kill_snake(grid)
                 return
             self.head = Head(new_head_position, RotateDegrees.Up)
         elif direction == 'd':
-            if x == 14:
-                self.kill_snake(grid)
-                return
             new_head_position = grid.itemAtPosition(x + 1, y).widget()
             if not self.possible_move(new_head_position, 'u'):
                 return
-            if self.should_kill(new_head_position):
-                self.kill_snake(grid)
-                return
             self.head = Head(new_head_position, RotateDegrees.Down)
         elif direction == 'l':
-            if y == 0:
-                self.kill_snake(grid)
-                return
             new_head_position = grid.itemAtPosition(x, y - 1).widget()
             if not self.possible_move(new_head_position, 'r'):
                 return
-            if self.should_kill(new_head_position):
-                self.kill_snake(grid)
-                return
             self.head = Head(new_head_position, RotateDegrees.Left)
         elif direction == 'r':
-            if y == 14:
-                self.kill_snake(grid)
-                return
             new_head_position = grid.itemAtPosition(x, y + 1).widget()
             if not self.possible_move(new_head_position, 'l'):
                 return
-            if self.should_kill(new_head_position):
-                self.kill_snake(grid)
-                return
             self.head = Head(new_head_position)
-
 
         # Cuvamo vrednosti opet zbog bolje preglednosti dalje
         old_degree = saved_head.degree
@@ -165,18 +136,8 @@ class Snake:
         for bodyPart in self.body:
             block = grid.itemAtPosition(bodyPart.x, bodyPart.y).widget()
             block.BType = BlockType.EmptyBlock
-
-        self.head = None
-        self.body = []
-        self.tail = None
-
-    @staticmethod
-    def should_kill(block):
-        if block.BType == BlockType.Body or \
-           block.BType == BlockType.CurvedBody or \
-           block.BType == BlockType.Tail:
-            return True
-        return False
+        
+        self.killed = True
 
     @staticmethod
     def tail_rotation(saved_body, saved_head, saved_tail):
