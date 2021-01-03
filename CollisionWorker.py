@@ -10,7 +10,7 @@ class CollisionWorker(Worker):
         self.playerOnMove = 0
         self.players = players
         self.listOfPlayers = list_of_players
-        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][0]
+        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][0] # poslednji indeks ([0]) je redni broj zmije
         self.grid = grid
         self.keys = keys
         self.all_snakes = all_snakes
@@ -34,11 +34,15 @@ class CollisionWorker(Worker):
                         self.snake.kill_snake(self.grid)
                         self.keys.remove(ret_val[2])
                 else:        
+                    # potez je validan
                     self.snake.move(self.grid, ret_val[0])
                     self.keys.remove(ret_val[1])
+                    # promeni igraca
                     self.playerOnMove = self.playerOnMove + 1
+                    # ako smo dosli do poslednjeg igraca vrati na prvog
                     if self.playerOnMove == self.numOfPlayers:
                         self.playerOnMove = 0
+                    # promeni zmiju
                     self.snake = self.players[self.listOfPlayers[self.playerOnMove]][0]
                 self.update.emit()
                  
