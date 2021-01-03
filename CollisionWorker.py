@@ -4,9 +4,13 @@ import time
 
 
 class CollisionWorker(Worker):
-    def __init__(self, snake, grid, keys, all_snakes, input_q: mp.Queue, output_q: mp.Queue):
+    def __init__(self, players, list_of_players, num_of_players, snake, grid, keys, all_snakes, input_q: mp.Queue, output_q: mp.Queue):
         super().__init__()
-        self.snake = snake
+        self.numOfPlayers = num_of_players
+        self.playerOnMove = 0
+        self.players = players
+        self.listOfPlayers = list_of_players
+        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][0]
         self.grid = grid
         self.keys = keys
         self.all_snakes = all_snakes
@@ -32,6 +36,10 @@ class CollisionWorker(Worker):
                 else:        
                     self.snake.move(self.grid, ret_val[0])
                     self.keys.remove(ret_val[1])
+                    self.playerOnMove = self.playerOnMove + 1
+                    if self.playerOnMove == self.numOfPlayers:
+                        self.playerOnMove = 0
+                    self.snake = self.players[self.listOfPlayers[self.playerOnMove]][0]
                 self.update.emit()
                  
                 while not self.output_q.empty():

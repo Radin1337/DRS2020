@@ -35,9 +35,8 @@
       <change beforePath="$PROJECT_DIR$/.idea/DRS2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRS2020.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollisionWorker.py" beforeDir="false" afterPath="$PROJECT_DIR$/CollisionWorker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Snake.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Snake.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/Settings.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +63,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/QtMPWorker" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../QtMPWorker" />
     <property name="restartRequiresConfirmation" value="false" />
     <property name="settings.editor.selected.configurable" value="reference.idesettings.debugger.python" />
   </component>
@@ -260,64 +259,6 @@
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
-  <component name="WindowStateProjectService">
-    <state width="697" height="466" key="DebuggerActiveHint" timestamp="1608918475449">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="697" height="466" key="DebuggerActiveHint/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608918475449" />
-    <state x="740" y="294" key="FileChooserDialogImpl" timestamp="1608920631107">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608920631107" />
-    <state width="938" height="119" key="GridCell.Tab.0.bottom" timestamp="1609006913378">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="938" height="119" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1609006913378" />
-    <state width="1877" height="191" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608933797348" />
-    <state width="938" height="119" key="GridCell.Tab.0.center" timestamp="1609006913378">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="938" height="119" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1609006913378" />
-    <state width="1877" height="191" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608933797348" />
-    <state width="938" height="119" key="GridCell.Tab.0.left" timestamp="1609006913378">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="938" height="119" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1609006913378" />
-    <state width="1877" height="191" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608933797348" />
-    <state width="938" height="119" key="GridCell.Tab.0.right" timestamp="1609006913378">
-      <screen x="0" y="0" width="1920" height="1040" />
-    </state>
-    <state width="938" height="119" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1609006913378" />
-    <state width="1877" height="191" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608933797348" />
-    <state width="1877" height="366" key="GridCell.Tab.1.bottom" timestamp="1608927159009">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1877" height="366" key="GridCell.Tab.1.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608927159009" />
-    <state width="1877" height="366" key="GridCell.Tab.1.center" timestamp="1608927159009">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1877" height="366" key="GridCell.Tab.1.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608927159009" />
-    <state width="1877" height="366" key="GridCell.Tab.1.left" timestamp="1608927159009">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1877" height="366" key="GridCell.Tab.1.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608927159009" />
-    <state width="1877" height="366" key="GridCell.Tab.1.right" timestamp="1608927159009">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state width="1877" height="366" key="GridCell.Tab.1.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608927159009" />
-    <state x="461" y="184" key="SettingsEditor" timestamp="1608918918593">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="461" y="184" key="SettingsEditor/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608918918593" />
-    <state x="512" y="275" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1608919081330">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="512" y="275" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608919081330" />
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup" timestamp="1608905950723">
-      <screen x="0" y="0" width="1920" height="1080" />
-    </state>
-    <state x="623" y="235" width="672" height="678" key="search.everywhere.popup/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1608905950723" />
-  </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <default-breakpoints>
@@ -326,9 +267,5 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DRS2020$GameMode.coverage" NAME="GameMode Coverage Results" MODIFIED="1608919407021" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/DRS2020$Start.coverage" NAME="Start Coverage Results" MODIFIED="1609006882310" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

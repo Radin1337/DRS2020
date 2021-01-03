@@ -101,7 +101,7 @@ class GameWindow(QMainWindow):
         self.CollisionProcess = CollisionProcess(self.in_queue_collision, self.out_queue_collision)
         self.CollisionProcess.start()
 
-        self.CollisionWorker = CollisionWorker(self.SnakeOnMove, self.grid, self.KeyStrokes, self.Snakes, self.in_queue_collision, self.out_queue_collision)
+        self.CollisionWorker = CollisionWorker(self.Players, self.ListOfPlayers, self.numOfPlayers, self.SnakeOnMove, self.grid, self.KeyStrokes, self.Snakes, self.in_queue_collision, self.out_queue_collision)
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
         self.CollisionWorker.start()
         self.signalFromCollision = 0
