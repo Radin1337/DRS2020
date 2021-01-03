@@ -39,7 +39,7 @@ class Snake:
         self.body = []
         self.tail = None
         self.eat = 0
-        self.last_move = 'r'
+        self.last_move = ''
         self.killed = False
 
     def move(self, grid, direction):           
