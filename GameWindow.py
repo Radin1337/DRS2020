@@ -164,8 +164,9 @@ class GameWindow(QMainWindow):
             if self.Players[self.ListOfPlayers[0]][0].killed == False: 
                 self.Players[self.ListOfPlayers[0]][0] = self.SnakeOnMove
             else:
-                self.Snakes.remove(self.Players[self.ListOfPlayers[0]][0])
-                self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
+                print("Brisanje")
+                #self.Snakes.remove(self.Players[self.ListOfPlayers[0]][0])
+                #self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
                     
         self.update()
         print(self.signalFromCollision)

@@ -34,6 +34,15 @@ class CollisionWorker(Worker):
                     if self.snake.head.x == ret_val[0] and self.snake.head.y == ret_val[1]:
                         self.snake.kill_snake(self.grid)
                         self.keys.remove(ret_val[2])
+
+                        self.snakeOnMove = self.snakeOnMove + 1
+                        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
+                        if self.snakeOnMove == self.numOfSnakes - 1:
+                            self.snakeOnMove = -1
+                            self.playerOnMove = self.playerOnMove + 1
+                            if self.playerOnMove == self.numOfPlayers:
+                                self.playerOnMove = 0
+                        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
                 else:
                     # potez je validan
                     self.snake.move(self.grid, ret_val[0])

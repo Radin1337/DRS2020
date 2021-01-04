@@ -55,69 +55,73 @@ class Snake:
         # Bolja preglednost koda sa x/y
         x = saved_head.x
         y = saved_head.y
-        # ------------------------------------- 
-        if direction == 'u':
-            new_head_position = grid.itemAtPosition(x - 1, y).widget()
-            if not self.possible_move(new_head_position, 'd'):
-                return
-            self.head = Head(new_head_position, RotateDegrees.Up)
-        elif direction == 'd':
-            new_head_position = grid.itemAtPosition(x + 1, y).widget()
-            if not self.possible_move(new_head_position, 'u'):
-                return
-            self.head = Head(new_head_position, RotateDegrees.Down)
-        elif direction == 'l':
-            new_head_position = grid.itemAtPosition(x, y - 1).widget()
-            if not self.possible_move(new_head_position, 'r'):
-                return
-            self.head = Head(new_head_position, RotateDegrees.Left)
-        elif direction == 'r':
-            new_head_position = grid.itemAtPosition(x, y + 1).widget()
-            if not self.possible_move(new_head_position, 'l'):
-                return
-            self.head = Head(new_head_position)
+        # -------------------------------------
 
-        # Cuvamo vrednosti opet zbog bolje preglednosti dalje
-        old_degree = saved_head.degree
-        new_degree = self.head.degree
-        blk_type = BlockType.Body
-        # Ako je zmija u prethodnom koraku presla preko hrane dodajemo novo telo iza glave.
-        # A u suprotnom sve pomeramo za jedno mesto
-        if self.eat == 1:
-            new_body_position = grid.itemAtPosition(x, y).widget()
+        if self.killed == False:
+            if direction == 'u':
+                new_head_position = grid.itemAtPosition(x - 1, y).widget()
+                if not self.possible_move(new_head_position, 'd'):
+                    return
+                self.head = Head(new_head_position, RotateDegrees.Up)
+            elif direction == 'd':
+                new_head_position = grid.itemAtPosition(x + 1, y).widget()
+                if not self.possible_move(new_head_position, 'u'):
+                    return
+                self.head = Head(new_head_position, RotateDegrees.Down)
+            elif direction == 'l':
+                new_head_position = grid.itemAtPosition(x, y - 1).widget()
+                if not self.possible_move(new_head_position, 'r'):
+                    return
+                self.head = Head(new_head_position, RotateDegrees.Left)
+            elif direction == 'r':
+                new_head_position = grid.itemAtPosition(x, y + 1).widget()
+                if not self.possible_move(new_head_position, 'l'):
+                    return
+                self.head = Head(new_head_position)
 
-            if old_degree != new_degree:
-                right_degree = self.body_rotation(old_degree, new_degree)
-                blk_type = BlockType.CurvedBody
+            # Cuvamo vrednosti opet zbog bolje preglednosti dalje
+            old_degree = saved_head.degree
+            new_degree = self.head.degree
+            blk_type = BlockType.Body
+            # Ako je zmija u prethodnom koraku presla preko hrane dodajemo novo telo iza glave.
+            # A u suprotnom sve pomeramo za jedno mesto
+            if self.eat == 1:
+                new_body_position = grid.itemAtPosition(x, y).widget()
+
+                if old_degree != new_degree:
+                    right_degree = self.body_rotation(old_degree, new_degree)
+                    blk_type = BlockType.CurvedBody
+                else:
+                    right_degree = old_degree
+
+                self.body.append(Body(new_body_position, right_degree, blk_type))
+                self.eat = 0
             else:
-                right_degree = old_degree
+                for i in range(0, len(self.body) - 1):
+                    new_body_position = grid.itemAtPosition(self.body[i + 1].x,
+                                                            self.body[i + 1].y).widget()
+                    self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType)
 
-            self.body.append(Body(new_body_position, right_degree, blk_type))
-            self.eat = 0
+                new_body_position = grid.itemAtPosition(x, y).widget()
+                if old_degree != new_degree:
+                    right_degree = self.body_rotation(old_degree, new_degree)
+                    blk_type = BlockType.CurvedBody
+                else:
+                    right_degree = old_degree
+                self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type)
+
+                # Odredjujemo novu poziciju  repa
+                new_tail_position = grid.itemAtPosition(saved_body[0].x, saved_body[0].y).widget()
+                tail_degree = self.tail_rotation(saved_body, saved_head, saved_tail)
+                self.tail = Tail(new_tail_position, tail_degree)
+
+                # Brisemo stari rep
+                clean_block = grid.itemAtPosition(saved_tail.x, saved_tail.y).widget()
+                clean_block.BType = BlockType.EmptyBlock
+
+            self.last_move = direction
         else:
-            for i in range(0, len(self.body) - 1):
-                new_body_position = grid.itemAtPosition(self.body[i + 1].x,
-                                                        self.body[i + 1].y).widget()
-                self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType)
-
-            new_body_position = grid.itemAtPosition(x, y).widget()
-            if old_degree != new_degree:
-                right_degree = self.body_rotation(old_degree, new_degree)
-                blk_type = BlockType.CurvedBody
-            else:
-                right_degree = old_degree
-            self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type)
-
-            # Odredjujemo novu poziciju  repa
-            new_tail_position = grid.itemAtPosition(saved_body[0].x, saved_body[0].y).widget()
-            tail_degree = self.tail_rotation(saved_body, saved_head, saved_tail)
-            self.tail = Tail(new_tail_position, tail_degree)
-
-            # Brisemo stari rep
-            clean_block = grid.itemAtPosition(saved_tail.x, saved_tail.y).widget()
-            clean_block.BType = BlockType.EmptyBlock
-
-        self.last_move = direction
+            print("Izbaciti prazan potez")
 
     def possible_move(self, block, not_possible):
         if block.BType == BlockType.Head:

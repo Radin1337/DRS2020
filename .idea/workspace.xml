@@ -32,7 +32,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b994a764-433c-4441-9af3-d249ee07e92e" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/DRS2020.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/DRS2020.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/CollisionWorker.py" beforeDir="false" afterPath="$PROJECT_DIR$/CollisionWorker.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameWindow.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models/Snake.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Snake.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,9 +64,9 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../QtMPWorker" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="restartRequiresConfirmation" value="false" />
-    <property name="settings.editor.selected.configurable" value="reference.idesettings.debugger.python" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -272,6 +277,10 @@
       <screen x="0" y="0" width="1280" height="680" />
     </state>
     <state width="1259" height="90" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1609698512433" />
+    <state x="142" y="0" key="SettingsEditor" timestamp="1609719056591">
+      <screen x="0" y="0" width="1280" height="680" />
+    </state>
+    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1609719056591" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
