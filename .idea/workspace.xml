@@ -37,7 +37,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CollisionWorker.py" beforeDir="false" afterPath="$PROJECT_DIR$/CollisionWorker.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/Snake.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/Snake.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -259,28 +258,6 @@
       </map>
     </option>
     <option name="oldMeFiltersMigrated" value="true" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state width="1259" height="90" key="GridCell.Tab.0.bottom" timestamp="1609698512433">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1259" height="90" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1609698512433" />
-    <state width="1259" height="90" key="GridCell.Tab.0.center" timestamp="1609698512433">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1259" height="90" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1609698512433" />
-    <state width="1259" height="90" key="GridCell.Tab.0.left" timestamp="1609698512433">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1259" height="90" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1609698512433" />
-    <state width="1259" height="90" key="GridCell.Tab.0.right" timestamp="1609698512433">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state width="1259" height="90" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1609698512433" />
-    <state x="142" y="0" key="SettingsEditor" timestamp="1609719056591">
-      <screen x="0" y="0" width="1280" height="680" />
-    </state>
-    <state x="142" y="0" key="SettingsEditor/0.0.1280.680@0.0.1280.680" timestamp="1609719056591" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

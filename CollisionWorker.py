@@ -32,6 +32,7 @@ class CollisionWorker(Worker):
             if ret_val[0] != -1:
                 if not isinstance(ret_val[0], str):
                     if self.snake.head.x == ret_val[0] and self.snake.head.y == ret_val[1]:
+
                         self.snake.kill_snake(self.grid)
                         self.keys.remove(ret_val[2])
 
@@ -49,10 +50,7 @@ class CollisionWorker(Worker):
                     self.keys.remove(ret_val[1])
                     # promeni igraca
                     self.snakeOnMove = self.snakeOnMove + 1
-                    # self.playerOnMove = self.playerOnMove + 1
-                    # ako smo dosli do poslednjeg igraca vrati na prvog
-                    # if self.playerOnMove == self.numOfPlayers:
-                    # self.playerOnMove = 0
+
                     # promeni zmiju
                     self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
                     if self.snakeOnMove == self.numOfSnakes - 1:

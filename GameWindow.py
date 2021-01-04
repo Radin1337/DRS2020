@@ -52,6 +52,7 @@ class GameWindow(QMainWindow):
         hb = QHBoxLayout()
 
         self.whoIsPlayingLabel = QLabel()
+        self.whoIsPlayingLabel.setFont(QFont('Arial', 15))
         self.whoIsPlayingLabel.setText("Playing: Player 1")
         self.whoIsPlayingLabel.setAlignment(Qt.AlignHCenter)
         vb.addWidget(self.whoIsPlayingLabel)
@@ -106,6 +107,8 @@ class GameWindow(QMainWindow):
         self.CollisionWorker.start()
         self.signalFromCollision = 0
 
+        self.playerOnMove = 1
+        self.snakeCounter = 1
         self.show()
 
     def init_map(self):
@@ -171,4 +174,16 @@ class GameWindow(QMainWindow):
         self.update()
         print(self.signalFromCollision)
         self.signalFromCollision = self.signalFromCollision + 1
+
+        self.snakeCounter = self.snakeCounter + 1
+        if self.snakeCounter == self.numOfSnakes + 1:
+            self.snakeCounter = 1
+            self.playerOnMove = self.playerOnMove + 1
+            if self.playerOnMove == self.numOfPlayers + 1:
+                self.playerOnMove = 1
+
+
+        self.whoIsPlayingLabel.setText("Playing: Player " + str(self.playerOnMove))
+
+
         
