@@ -63,6 +63,16 @@ class GameWindow(QMainWindow):
         self.snakeLabel.setAlignment(Qt.AlignHCenter)
         vb.addWidget(self.snakeLabel)
 
+        self.moveLabel = QLabel()
+        self.moveLabel.setFont(QFont('Arial', 12))
+        vb.addWidget(self.moveLabel)
+        # inicijalizacija tajmera
+        self.moveTime = 12.00
+        self.timer2 = QTimer(self)
+        self.timer2.setSingleShot(False)
+        self.timer2.timeout.connect(self.turn_timer)
+        self.timer2.start(100)
+
         hb.addLayout(vb)
         self.grid = QGridLayout()
 
@@ -136,6 +146,17 @@ class GameWindow(QMainWindow):
                 snakes.append(s)
         self.update()
 
+    def turn_timer(self):
+        #mozemo i za 0.01
+        self.moveTime -= 0.1
+        if (self.moveTime < 0):
+            self.moveTime = 0.00
+        self.moveLabel.setText("Time: %.2f" % self.moveTime)
+
+    def reset_timer(self):
+        self.moveTime = 12.00
+        self.timer2.start()
+
     # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
@@ -184,11 +205,11 @@ class GameWindow(QMainWindow):
         self.snakeCounter = self.snakeCounter + 1
         if self.snakeCounter == self.numOfSnakes + 1:
             self.snakeCounter = 1
+            self.timer2.stop()
+            self.reset_timer()
             self.playerOnMove = self.playerOnMove + 1
             if self.playerOnMove == self.numOfPlayers + 1:
                 self.playerOnMove = 1
 
         self.whoIsPlayingLabel.setText("Playing: Player " + str(self.playerOnMove))
         self.snakeLabel.setText("Snake " + str(self.snakeCounter))
-
-        
