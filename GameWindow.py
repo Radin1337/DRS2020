@@ -57,6 +57,12 @@ class GameWindow(QMainWindow):
         self.whoIsPlayingLabel.setAlignment(Qt.AlignHCenter)
         vb.addWidget(self.whoIsPlayingLabel)
 
+        self.snakeLabel = QLabel()
+        self.snakeLabel.setFont(QFont('Arial', 12))
+        self.snakeLabel.setText("Snake 1")
+        self.snakeLabel.setAlignment(Qt.AlignHCenter)
+        vb.addWidget(self.snakeLabel)
+
         hb.addLayout(vb)
         self.grid = QGridLayout()
 
@@ -66,7 +72,7 @@ class GameWindow(QMainWindow):
         w.layout().setSpacing(0)
         self.setCentralWidget(w)
         self.timer = QBasicTimer()
-        self.timer.start(2000, self)
+        self.timer.start(4000, self)
 
         self.init_map()
 
@@ -182,8 +188,7 @@ class GameWindow(QMainWindow):
             if self.playerOnMove == self.numOfPlayers + 1:
                 self.playerOnMove = 1
 
-
         self.whoIsPlayingLabel.setText("Playing: Player " + str(self.playerOnMove))
-
+        self.snakeLabel.setText("Snake " + str(self.snakeCounter))
 
         
