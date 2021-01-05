@@ -41,6 +41,7 @@ class Snake:
         self.eat = 0
         self.last_move = ''
         self.killed = False
+        self.numOfMoves = 1
 
     def move(self, grid, direction):           
         # Smestamo postojece delove tela u lokalne promenljive
@@ -86,6 +87,8 @@ class Snake:
             # Ako je zmija u prethodnom koraku presla preko hrane dodajemo novo telo iza glave.
             # A u suprotnom sve pomeramo za jedno mesto
             if self.eat == 1:
+                # kada pojede hranu povecava se broj poteza
+                self.numOfMoves = self.numOfMoves + 1
                 new_body_position = grid.itemAtPosition(x, y).widget()
 
                 if old_degree != new_degree:

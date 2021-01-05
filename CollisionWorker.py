@@ -11,8 +11,10 @@ class CollisionWorker(Worker):
         self.players = players
         self.listOfPlayers = list_of_players
         self.numOfSnakes = num_of_snakes
-        self.snakeOnMove = -1
+        self.snakeOnMove = 0
         self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove] # poslednji indeks ([0]) je redni broj zmije
+        self.odigranoKoraka = 0
+        self.dozvoljenoKoraka = 1
         self.grid = grid
         self.keys = keys
         self.all_snakes = all_snakes
@@ -36,30 +38,45 @@ class CollisionWorker(Worker):
                         self.snake.kill_snake(self.grid)
                         self.keys.remove(ret_val[2])
 
-                        self.snakeOnMove = self.snakeOnMove + 1
+                        # registrujemo da je odigran korak (bez obzira da li je validan)
+                        self.odigranoKoraka = self.odigranoKoraka + 1
+                        # ako je odigran dozvoljen broj koraka promeni zmiju
+                        if self.odigranoKoraka == self.dozvoljenoKoraka:
+                            self.odigranoKoraka = 0
+                            self.snakeOnMove = self.snakeOnMove + 1
+                            # ako su igrale sve zmije jednog igraca, promeni igraca
+                            if self.snakeOnMove == self.numOfSnakes:
+                                self.snakeOnMove = 0
+                                self.playerOnMove = self.playerOnMove + 1
+                                # ako su igrali svi igraci vrati na prvog
+                                if self.playerOnMove == self.numOfPlayers:
+                                    self.playerOnMove = 0
+                        # procitaj koja zmija je na potezu, bez obzira da li je doslo do promene zmije/igraca
                         self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
-                        if self.snakeOnMove == self.numOfSnakes - 1:
-                            self.snakeOnMove = -1
-                            self.playerOnMove = self.playerOnMove + 1
-                            if self.playerOnMove == self.numOfPlayers:
-                                self.playerOnMove = 0
-                        self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
+                        # procitaj koliko zmija koja je na potezu ima koraka
+                        self.dozvoljenoKoraka = self.snake.numOfMoves
                 else:
                     # potez je validan
                     self.snake.move(self.grid, ret_val[0])
                     self.keys.remove(ret_val[1])
-                    # promeni igraca
-                    self.snakeOnMove = self.snakeOnMove + 1
 
-                    # promeni zmiju
+                    # registrujemo da je odigran korak (bez obzira da li je validan)
+                    self.odigranoKoraka = self.odigranoKoraka + 1
+                    # ako je odigran dozvoljen broj koraka promeni zmiju
+                    if self.odigranoKoraka == self.dozvoljenoKoraka:
+                        self.odigranoKoraka = 0
+                        self.snakeOnMove = self.snakeOnMove + 1
+                        # ako su igrale sve zmije jednog igraca, promeni igraca
+                        if self.snakeOnMove == self.numOfSnakes:
+                            self.snakeOnMove = 0
+                            self.playerOnMove = self.playerOnMove + 1
+                            # ako su igrali svi igraci vrati na prvog
+                            if self.playerOnMove == self.numOfPlayers:
+                                self.playerOnMove = 0
+                    # procitaj koja zmija je na potezu, bez obzira da li je doslo do promene zmije/igraca
                     self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
-                    if self.snakeOnMove == self.numOfSnakes - 1:
-                        self.snakeOnMove = -1
-                        self.playerOnMove = self.playerOnMove + 1
-                        if self.playerOnMove == self.numOfPlayers:
-                            self.playerOnMove = 0
-                    self.snake = self.players[self.listOfPlayers[self.playerOnMove]][self.snakeOnMove]
-
+                    # procitaj koliko zmija koja je na potezu ima koraka
+                    self.dozvoljenoKoraka = self.snake.numOfMoves
                 self.update.emit()
                  
                 while not self.output_q.empty():

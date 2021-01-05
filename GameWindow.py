@@ -125,6 +125,7 @@ class GameWindow(QMainWindow):
 
         self.playerOnMove = 1
         self.snakeCounter = 1
+        self.currentMove = 1
         self.show()
 
     def init_map(self):
