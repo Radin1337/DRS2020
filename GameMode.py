@@ -16,14 +16,14 @@ class GameModeWindow(QMainWindow):
         self.setMinimumWidth(self.WindowW)
         self.setMaximumHeight(self.WindowH)
         self.setMaximumWidth(self.WindowW)
-        self.setWindowTitle("Select game mode")
+        self.setWindowTitle("Create game or join one")
         self.setStyleSheet("background-color: black;")
         self.setWindowIcon(QIcon('resources/icon.png'))
 
         self.singlePlayerButton = QtWidgets.QPushButton("", self)
         self.singlePlayerButton.setStyleSheet(
             "border:2px solid blue; color: " "blue;font-size: 27px; font-family: Calibri; "
-            "background-image: url(resources/SPButton.jpg);")
+            "background-image: url(resources/createGame.jpg);")
         self.singlePlayerButton.setGeometry(275, 200, 250, 50)
         self.singlePlayerButton.setCursor(Qt.PointingHandCursor)
         self.singlePlayerButton.released.connect(self.run)
@@ -31,7 +31,7 @@ class GameModeWindow(QMainWindow):
         self.multiPlayerButton = QtWidgets.QPushButton("", self)
         self.multiPlayerButton.setStyleSheet(
             "border:2px solid blue; color: " "blue;font-size: 27px; font-family: Calibri; "
-            "background-image: url(resources/MPButton.jpg);")
+            "background-image: url(resources/joinGame.jpg);")
         self.multiPlayerButton.setGeometry(275, 300, 250, 50)
         self.multiPlayerButton.setCursor(Qt.PointingHandCursor)
         self.center()
