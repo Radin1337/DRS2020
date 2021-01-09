@@ -127,6 +127,20 @@ class GameWindow(QMainWindow):
                 snakes.append(s)
         self.update()
 
+    def closeEvent(self, event):
+        close = QMessageBox.question(self,
+                                     "QUIT",
+                                     "Sure?",
+                                     QMessageBox.Yes | QMessageBox.No)
+        if close == QMessageBox.Yes:
+            self.eatFoodWorker.thread.terminate()
+            self.EatFoodProcess.terminate()
+            self.CollisionWorker.thread.terminate()
+            self.CollisionProcess.terminate()
+            event.accept()
+        else:
+            event.ignore()
+
     # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
         if event.timerId() == self.timer.timerId():
