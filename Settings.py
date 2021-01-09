@@ -8,7 +8,7 @@ from PyQt5.QtCore import Qt, QRectF
 import sys
 import time
 from GameWindow import GameWindow
-
+from LoadingScreen import LoadingScreen
 
 class SettingsWindow(QMainWindow):
     SettingsWindowH = 600
@@ -83,6 +83,6 @@ class SettingsWindow(QMainWindow):
         subprocess.Popen("python GameServer.py numberOfPlayers={0} numberOfSnakes={1}".format(self.numberOfPlayers,
                                                                                               self.numberOfSnakes))
         time.sleep(1)
-        self.gameWindow = GameWindow(self.numberOfPlayers, self.numberOfSnakes, self)
+        self.loadWindow = LoadingScreen(self.geometry(),self.numberOfPlayers, self.numberOfSnakes)
 
         self.hide()

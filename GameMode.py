@@ -6,7 +6,7 @@ from PyQt5.QtCore import Qt, QRectF
 import sys
 from Settings import SettingsWindow
 from GameWindow import GameWindow
-
+from LoadingScreen import LoadingScreen
 
 class GameModeWindow(QMainWindow):
     WindowH = 600
@@ -54,6 +54,6 @@ class GameModeWindow(QMainWindow):
         self.hide()
 
     def joinGame(self):
-        self.gameWindow = GameWindow(-1, -1, self)
+        self.gameWindow = LoadingScreen(self.geometry(), -1, -1)
 
         self.hide()

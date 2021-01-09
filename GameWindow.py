@@ -23,28 +23,6 @@ HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
 
 
-class LoadingScreen(QMainWindow):
-
-    def __init__(self, geom):
-        super().__init__()
-        self.setFixedSize(800, 600)
-        self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-
-        self.label_animation = QLabel(self)
-        self.wfpgif = QMovie('resources/waitingforplayers.gif')
-        self.label_animation.setMovie(self.wfpgif)
-        self.setCentralWidget(self.label_animation)
-        self.setGeometry(geom)
-        self.show()
-
-    def startAnimation(self):
-        self.wfpgif.start()
-
-    def stopAnimation(self):
-        self.wfpgif.stop()
-        self.close()
-
-
 class GameWindow(QMainWindow):
     GameWindowH = 600
     GameWindowW = 800
@@ -55,23 +33,6 @@ class GameWindow(QMainWindow):
         self.myUniqueID = -1
         self.numOfPlayers = numberOfPlayers
         self.numOfSnakes = numberOfSnakes
-
-        self.s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.s.connect((HOST, PORT))
-        data = self.s.recv(1024)
-        dataString = data.decode()
-        nPnS = dataString.split(";")
-        self.numOfPlayers = int(nPnS[0])
-        self.numOfSnakes = int(nPnS[1])
-        self.myUniqueID = int(nPnS[2])
-        print("Server sent information. Number of players: ", self.numOfPlayers)
-        print("Server sent information. Number of snakes: ", self.numOfSnakes)
-        print("Server sent information. Player unique ID: ", self.myUniqueID)
-
-        # We will now wait for all players etc server to send start command
-        self.loading_screen = LoadingScreen(self.geometry())
-
-        self.loading_screen.startAnimation()
 
         # setting geometry to the window
         # screen = QDesktopWidget().screenGeometry()
@@ -89,7 +50,7 @@ class GameWindow(QMainWindow):
         self.setMaximumHeight(self.GameWindowH)
         self.setMaximumWidth(self.GameWindowW)
         self.setWindowTitle('Game window')
-
+        self.s = lastwind.s
         vb = QVBoxLayout()
         w = QWidget()
         hb = QHBoxLayout()
@@ -109,9 +70,6 @@ class GameWindow(QMainWindow):
         self.setCentralWidget(w)
         self.timer = QBasicTimer()
         self.timer.start(2000, self)
-
-        self.ConnTimer = QBasicTimer()
-        self.ConnTimer.start(1000, self)
 
         self.init_map()
 
@@ -154,7 +112,7 @@ class GameWindow(QMainWindow):
         self.CollisionWorker.start()
         self.signalFromCollision = 0
 
-        # self.show()
+        self.show()
 
     def init_map(self):
         # Add positions to the map
@@ -195,22 +153,6 @@ class GameWindow(QMainWindow):
         if event.timerId() == self.timer.timerId():
             self.drop_food()
             self.update()
-        if event.timerId() == self.ConnTimer.timerId():
-            try:
-                self.s.settimeout(0.3)
-                data = self.s.recv(1024)
-                dataString = data.decode()
-                if dataString == "GO":
-                    self.loading_screen.stopAnimation()
-                    self.setGeometry(self.loading_screen.geometry())
-                    self.show()
-                    self.ConnTimer.stop()  # Ovde treba da se doda i da se promeni neka
-                    # promenjiva koja oznacava pocetak i onda moze da
-                    # se spawnuje hrana i zmije krecu
-                else:
-                    pass
-            except socket.timeout:
-                pass
 
     def drop_food(self):
         x, y = random.randint(0, 14), random.randint(0, 14)
