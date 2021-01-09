@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QFont, QImage, QBrush, QCol
 from PyQt5.QtCore import Qt, QRectF
 import sys
 from Settings import SettingsWindow
+from GameWindow import GameWindow
+
 
 class GameModeWindow(QMainWindow):
     WindowH = 600
@@ -34,7 +36,9 @@ class GameModeWindow(QMainWindow):
             "background-image: url(resources/joinGame.jpg);")
         self.multiPlayerButton.setGeometry(275, 300, 250, 50)
         self.multiPlayerButton.setCursor(Qt.PointingHandCursor)
-        self.center()
+        self.multiPlayerButton.released.connect(self.joinGame)
+        # self.center()
+        self.setGeometry(mainwind.geometry())
 
         self.show()
 
@@ -47,4 +51,9 @@ class GameModeWindow(QMainWindow):
     def run(self):
         # print("Run Run")
         self.Settings = SettingsWindow(self)
+        self.hide()
+
+    def joinGame(self):
+        self.gameWindow = GameWindow(-1, -1, self)
+
         self.hide()
