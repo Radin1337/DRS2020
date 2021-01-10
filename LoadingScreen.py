@@ -33,7 +33,7 @@ class LoadingScreen(QMainWindow):
         print("Server sent information. Player unique ID: ", self.myUniqueID)
 
         self.conntimer = QBasicTimer()
-        self.conntimer.start(1000,self)
+        self.conntimer.start(1000, self)
         self.label_animation = QLabel(self)
         self.wfpgif = QMovie('resources/waitingforplayers.gif')
         self.label_animation.setMovie(self.wfpgif)
@@ -56,6 +56,7 @@ class LoadingScreen(QMainWindow):
                 dataString = data.decode()
                 if dataString == "GO":
                     self.stopAnimation()
+                    self.s.settimeout(socket.getdefaulttimeout())
                     self.gameWindow = GameWindow(self.numOfPlayers,self.numOfSnakes,self)
                     self.conntimer.stop()  # Ovde treba da se doda i da se promeni neka
                     # promenjiva koja oznacava pocetak i onda moze da

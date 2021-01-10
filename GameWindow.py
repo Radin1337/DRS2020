@@ -18,6 +18,7 @@ from multiprocessing import Queue
 from ProcessEatFood import ProcessEatFood
 from CollisionWorker import CollisionWorker
 from CollisionProcess import CollisionProcess
+from ServerCommsWorker import ServerCommsWorker
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
@@ -30,7 +31,12 @@ class GameWindow(QMainWindow):
     def __init__(self, numberOfPlayers, numberOfSnakes, lastwind):
         super(GameWindow, self).__init__()
         self.setGeometry(lastwind.geometry())
-        self.myUniqueID = -1
+        self.myUniqueID = lastwind.myUniqueID
+        self.currentIDPlaying = -1  # to block and unblock gameplay
+        self.timeCounter = -1
+
+        self.timerForMove = QBasicTimer()
+        self.firstTimeGotID = True
         self.numOfPlayers = numberOfPlayers
         self.numOfSnakes = numberOfSnakes
 
@@ -55,9 +61,17 @@ class GameWindow(QMainWindow):
         w = QWidget()
         hb = QHBoxLayout()
 
+        self.iAmLabel = QLabel()
+        self.iAmLabel.setFont(QFont('Times', 14))
+        self.iAmLabel.setText("I am Player {0}".format(self.myUniqueID+1))
+        self.iAmLabel.setAlignment(Qt.AlignHCenter)
+        vb.addWidget(self.iAmLabel)
         self.whoIsPlayingLabel = QLabel()
-        self.whoIsPlayingLabel.setText("Playing: Player 1")
+        self.whoIsPlayingLabel.setWordWrap(True)
+        self.whoIsPlayingLabel.setFont(QFont('Times', 14))
+        self.whoIsPlayingLabel.setText("Playing: Game is starting...")
         self.whoIsPlayingLabel.setAlignment(Qt.AlignHCenter)
+
         vb.addWidget(self.whoIsPlayingLabel)
 
         hb.addLayout(vb)
@@ -68,8 +82,8 @@ class GameWindow(QMainWindow):
         w.layout().setContentsMargins(0, 0, 0, 0)
         w.layout().setSpacing(0)
         self.setCentralWidget(w)
-        self.timer = QBasicTimer()
-        self.timer.start(2000, self)
+        self.iAmLabel.move(QPoint(0, 0))
+        self.whoIsPlayingLabel.move(QPoint(0, 5))
 
         self.init_map()
 
@@ -97,7 +111,7 @@ class GameWindow(QMainWindow):
         self.eatFoodWorker.start()
         self.signalCounter = 0
 
-        self.SnakeOnMove = self.Players[self.ListOfPlayers[0]][0]
+        self.SnakeOnMove = self.Players[self.ListOfPlayers[self.myUniqueID]][0]
         self.KeyStrokes = []
         # Setting up process and worker to check up on collisions
         self.in_queue_collision = Queue()
@@ -111,6 +125,12 @@ class GameWindow(QMainWindow):
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
         self.CollisionWorker.start()
         self.signalFromCollision = 0
+
+        self.comms_to_send_queue = Queue()
+        self.comms_to_receive_queue = Queue()
+        self.CommsWorker = ServerCommsWorker(self.s, self.comms_to_send_queue, self.comms_to_receive_queue)
+        self.CommsWorker.update.connect(self.receive_from_communication_worker)
+        self.CommsWorker.start()
 
         self.show()
 
@@ -143,6 +163,7 @@ class GameWindow(QMainWindow):
             self.EatFoodProcess.terminate()
             self.CollisionWorker.thread.terminate()
             self.CollisionProcess.terminate()
+            self.CommsWorker.thread.terminate()
             self.s.close()
             event.accept()
         else:
@@ -150,23 +171,26 @@ class GameWindow(QMainWindow):
 
     # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
-        if event.timerId() == self.timer.timerId():
-            self.drop_food()
-            self.update()
+        if self.timerForMove.timerId() == event.timerId():  # One second passed
+            self.timeCounter = self.timeCounter - 1
+            playerNumber = self.currentIDPlaying + 1
+            self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber,
+                                                                                       self.timeCounter))
 
-    def drop_food(self):
-        x, y = random.randint(0, 14), random.randint(0, 14)
+    def drop_food(self, x, y):
         b = self.grid.itemAtPosition(x, y).widget()
 
         if b.BType == BlockType.EmptyBlock:
             self.Food.append(Food(b))
+            self.update()
         else:
-            self.drop_food()
+            self.drop_food(x+1, y+1) #ovde cemo vrv zahtevati od servera drugi drop
 
     def keyPressEvent(self, e: QKeyEvent):
-        if len(self.Players[self.ListOfPlayers[0]]) != 0:
-            self.KeyStrokes.append(e.key())
-            time.sleep(0.05)
+        if self.myUniqueID == self.currentIDPlaying:
+            if len(self.Players[self.ListOfPlayers[0]]) != 0:
+                self.KeyStrokes.append(e.key())
+                time.sleep(0.05)
 
     @pyqtSlot()
     def receive_from_eatfood_worker(self):
@@ -191,3 +215,31 @@ class GameWindow(QMainWindow):
         self.update()
         print(self.signalFromCollision)
         self.signalFromCollision = self.signalFromCollision + 1
+
+    @pyqtSlot()
+    def receive_from_communication_worker(self):
+        print("Signal from comm worker received")
+        raw_data = self.comms_to_receive_queue.get()
+        messages = raw_data.split(";")
+
+        for message in messages[:-1]:
+            print("Received: ", message)
+            if "Playing" in message:
+                splitlist = message.split("/")
+                playerNumber = int(splitlist[1])
+                self.currentIDPlaying = playerNumber
+                playerNumber = playerNumber+1  # for nice print
+                self.timeCounter = 10
+                self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber, self.timeCounter))
+                if self.firstTimeGotID:
+                    self.timerForMove.start(1000, self)
+                    self.firstTimeGotID = False
+            elif "DropFood" in message:
+                splitlist = message.split("/")
+                xf = int(splitlist[1])
+                yf = int(splitlist[2])
+                self.drop_food(xf, yf)
+            elif message == "":
+                pass
+            else:
+                print("Message not recognized")
