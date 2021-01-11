@@ -12,6 +12,7 @@ HOST = '127.0.0.1'
 PORT = 65432
 sel = selectors.DefaultSelector()
 
+lock = threading.Lock()
 
 numberOfPlayersString = sys.argv[1]
 numberOfPlayers = int(numberOfPlayersString[16:])
@@ -35,32 +36,40 @@ def accept_wrapper(sock):  # Accepting clients and making sockets non-blocking
     conn.sendall(sts.encode())
     conn.setblocking(False)  # We dont wanna players to block our server
     data = types.SimpleNamespace(addr=addr, inb=b'', outb=b'')
-    events = selectors.EVENT_READ | selectors.EVENT_WRITE  # Players will send/receive data to/from sever
+    # We will only check in main server thread are there messages to read bcs send is time controlled
+    events = selectors.EVENT_READ
     sel.register(conn, events, data=data)
     PlayerSockets.append(conn)
 
 
-def service_connection(key, mask):  # Handling incoming msgs from clients
+def receive_message(key, mask):  # Handling incoming msgs from clients
     sock = key.fileobj
     data = key.data
     if mask & selectors.EVENT_READ:  # If we have something to receive from clients
-        recv_data = sock.recv(1024)  # Receive
-        if recv_data:
-            data.outb += recv_data  # add to buffer
-        else:
-            print('closing connection to', data.addr)
-            sel.unregister(sock)
-            sock.close()
-    if mask & selectors.EVENT_WRITE:  # If clients are ready to receive commands from server
-        if data.outb:  # if there is un send commands send them to remaining clients
-            print("Sending command to clients: ", repr(data.outb))
-            for i in range(len(PlayerSockets)):
-                if PlayerSockets[i] != sock:  # We wont send command to player who made a move
-                    sent = PlayerSockets[i].send(data.outb)
-                    data.outb = data.outb[sent:]
+        with lock:
+            recv_data = sock.recv(1024)  # Receive
+            if recv_data:
+                recvString = recv_data.decode()
+                messages = recvString.split(";")
+                for message in messages[:-1]:
+                    if "Command" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[1]
+                        playerID = splitStrings[2]
+                        snakeId = splitStrings[3]
+                        stsc = "Command/{0}/{1}/{2};".format(command, int(playerID), int(snakeId))
+                        for sck in PlayerSockets:
+                            if sck != PlayerSockets[int(playerID)]:
+                                sck.send(stsc.encode())
+                    else:
+                        print("Message not recognized.")
+            else:
+                print('closing connection to', data.addr)
+                sel.unregister(sock)
+                sock.close()
 
 
-def changePlayer(start_id, numberofplayers):
+def changePlayerAndSpawnFood(start_id, numberofplayers):
     time.sleep(1)
     counterFood = 0  # Every time when its 2, its passed 20 second so spawn food
     firstTime = True
@@ -71,14 +80,16 @@ def changePlayer(start_id, numberofplayers):
             time.sleep(3)
         else:
             sts = "Playing/{0};".format(start_id)
-            for sck in PlayerSockets:
-                sck.send(sts.encode())
+            with lock:
+                for sck in PlayerSockets:
+                    sck.send(sts.encode())
             if counterFood == 2:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
                 counterFood = 0
                 fsts = "DropFood/{0}/{1};".format(xf, yf)
-                for sck in PlayerSockets:
-                    sck.send(fsts.encode())
+                with lock:
+                    for sck in PlayerSockets:
+                        sck.send(fsts.encode())
             else:
                 counterFood = counterFood + 1
 
@@ -99,15 +110,20 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
 
         sck.sendall(sts.encode())
     time.sleep(3)
-    x = threading.Thread(target=changePlayer, args=(0, numberOfPlayers))
+    x = threading.Thread(target=changePlayerAndSpawnFood, args=(0, numberOfPlayers))
     x.daemon = True
     x.start()
-    sys.stdin.read(1)
-    
-    """while True:
-            events = sel.select(timeout=None)  # sel.select(timeout=None) blocks until there are sockets ready for I/O.
+
+    while True:
+        print("Msg received")
+        try:
+            events = sel.select(timeout=None)  # sel.select(timeout=None) blocks until there are incoming messages.
             for key, mask in events:
-                service_connection(key, mask)"""
+                receive_message(key, mask)
+        except Exception:
+            print("Server shutting down.")
+            break
+    exit(0)
 
 
 

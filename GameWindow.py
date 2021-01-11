@@ -189,7 +189,10 @@ class GameWindow(QMainWindow):
     def keyPressEvent(self, e: QKeyEvent):
         if self.myUniqueID == self.currentIDPlaying:
             if len(self.Players[self.ListOfPlayers[0]]) != 0:
+                # ovde takodje trebaju provere da se registruju samo dozvoljeni tasteri
                 self.KeyStrokes.append(e.key())
+                sendString = "Command/{0}/{1}/{2};".format(e.key(), self.myUniqueID, 0)  # kasnije resiti id zmije
+                self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
     @pyqtSlot()
@@ -239,6 +242,13 @@ class GameWindow(QMainWindow):
                 xf = int(splitlist[1])
                 yf = int(splitlist[2])
                 self.drop_food(xf, yf)
+            elif "Command" in message:
+                splitlist = message.split("/")
+                keyNumber = splitlist[1]
+                commandPlayerID = int(splitlist[2])
+                commandSnakeID = int(splitlist[3])
+                print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(keyNumber, commandPlayerID,
+                                                                                   commandSnakeID))
             elif message == "":
                 pass
             else:
