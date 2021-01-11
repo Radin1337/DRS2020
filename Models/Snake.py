@@ -58,23 +58,15 @@ class Snake:
         # ------------------------------------- 
         if direction == 'u':
             new_head_position = grid.itemAtPosition(x - 1, y).widget()
-            if not self.possible_move(new_head_position, 'd'):
-                return
             self.head = Head(new_head_position, RotateDegrees.Up)
         elif direction == 'd':
             new_head_position = grid.itemAtPosition(x + 1, y).widget()
-            if not self.possible_move(new_head_position, 'u'):
-                return
             self.head = Head(new_head_position, RotateDegrees.Down)
         elif direction == 'l':
             new_head_position = grid.itemAtPosition(x, y - 1).widget()
-            if not self.possible_move(new_head_position, 'r'):
-                return
             self.head = Head(new_head_position, RotateDegrees.Left)
         elif direction == 'r':
             new_head_position = grid.itemAtPosition(x, y + 1).widget()
-            if not self.possible_move(new_head_position, 'l'):
-                return
             self.head = Head(new_head_position)
 
         # Cuvamo vrednosti opet zbog bolje preglednosti dalje
@@ -118,14 +110,6 @@ class Snake:
             clean_block.BType = BlockType.EmptyBlock
 
         self.last_move = direction
-
-    def possible_move(self, block, not_possible):
-        if block.BType == BlockType.Head:
-            return False
-        elif self.last_move == not_possible:
-            return False
-        else:
-            return True
 
     def kill_snake(self, grid):
         block = grid.itemAtPosition(self.head.x, self.head.y).widget()
@@ -181,24 +165,28 @@ class Snake:
 
     def init_snake(self, grid, player_id, snake_id):
         need_to_rotate = RotateDegrees.Right
-        if player_id == "id1":
+        if player_id == 0:
             head_position = grid.itemAtPosition(0 + snake_id, 2).widget()
             body_position = grid.itemAtPosition(0 + snake_id, 1).widget()
             tail_position = grid.itemAtPosition(0 + snake_id, 0).widget()
-        elif player_id == "id2":
+            self.last_move = 'r'
+        elif player_id == 1:
             head_position = grid.itemAtPosition(0 + snake_id, 12).widget()
             body_position = grid.itemAtPosition(0 + snake_id, 13).widget()
             tail_position = grid.itemAtPosition(0 + snake_id, 14).widget()
             need_to_rotate = RotateDegrees.Left
-        elif player_id == "id3":
+            self.last_move = 'l'
+        elif player_id == 2:
             head_position = grid.itemAtPosition(14 - snake_id, 2).widget()
             body_position = grid.itemAtPosition(14 - snake_id, 1).widget()
             tail_position = grid.itemAtPosition(14 - snake_id, 0).widget()
+            self.last_move = 'r'
         else:
             head_position = grid.itemAtPosition(14 - snake_id, 12).widget()
             body_position = grid.itemAtPosition(14 - snake_id, 13).widget()
             tail_position = grid.itemAtPosition(14 - snake_id, 14).widget()
             need_to_rotate = RotateDegrees.Left
+            self.last_move = 'l'
 
         self.head = Head(head_position, need_to_rotate)
         self.body.append(Body(body_position, need_to_rotate))

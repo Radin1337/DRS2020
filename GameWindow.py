@@ -97,7 +97,7 @@ class GameWindow(QMainWindow):
         self.Snakes = []
 
         for i in range(numberOfPlayers):
-            self.Snakes.extend(self.Players["id" + str(i + 1)])
+            self.Snakes.extend(self.Players[i])
 
         self.in_queue_eatfood = Queue()
         self.out_queue_eatfood = Queue()
@@ -143,7 +143,7 @@ class GameWindow(QMainWindow):
 
     def init_players(self):
         for i in range(0, self.numOfPlayers):
-            self.ListOfPlayers.append("id" + str(i + 1))
+            self.ListOfPlayers.append(i)
 
     def init_snakes(self):
         for player_id, snakes in self.Players.items():
@@ -190,9 +190,11 @@ class GameWindow(QMainWindow):
         if self.myUniqueID == self.currentIDPlaying:
             if len(self.Players[self.ListOfPlayers[0]]) != 0:
                 # ovde takodje trebaju provere da se registruju samo dozvoljeni tasteri
-                self.KeyStrokes.append(e.key())
-                sendString = "Command/{0}/{1}/{2};".format(e.key(), self.myUniqueID, 0)  # kasnije resiti id zmije
-                self.comms_to_send_queue.put(sendString)
+                cought_key = e.key()
+                if cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
+                    self.KeyStrokes.append(cought_key)
+                    sendString = "Command/{0}/{1}/{2};".format(cought_key, self.myUniqueID, 0)  # kasnije resiti id zmije
+                    self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
     @pyqtSlot()
@@ -209,7 +211,7 @@ class GameWindow(QMainWindow):
     def receive_from_collision_worker(self):
         print("Signal from collision worker recieved")
         if len(self.Players[self.ListOfPlayers[0]]) != 0:
-            if self.Players[self.ListOfPlayers[0]][0].killed == False:
+            if not self.Players[self.ListOfPlayers[0]][0].killed:
                 self.Players[self.ListOfPlayers[0]][0] = self.SnakeOnMove
             else:
                 self.Snakes.remove(self.Players[self.ListOfPlayers[0]][0])

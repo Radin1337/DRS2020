@@ -20,17 +20,19 @@ class CollisionWorker(Worker):
             temp_body_parts = []
             for s in self.all_snakes:
                 temp_body_parts.extend(list(map(lambda b: [b.x, b.y], s.body)))
-            
+            temp_heads = list(map(lambda s: [s.head.x, s.head.y], self.all_snakes))
+            temp_last_direction = self.snake.last_move
 
-            self.input_q.put([temp_head, self.keys, temp_body_parts, temp_tails])
+            self.input_q.put([temp_head, self.keys, temp_body_parts, temp_tails, temp_heads, temp_last_direction])
             ret_val = self.output_q.get()
             if ret_val[0] != -1:
                 if not isinstance(ret_val[0], str):
                     if self.snake.head.x == ret_val[0] and self.snake.head.y == ret_val[1]:
                         self.snake.kill_snake(self.grid)
                         self.keys.remove(ret_val[2])
-                else:        
-                    self.snake.move(self.grid, ret_val[0])
+                else:
+                    if not ret_val[0] == '':
+                        self.snake.move(self.grid, ret_val[0])
                     self.keys.remove(ret_val[1])
                 self.update.emit()
                  
