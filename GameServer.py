@@ -115,7 +115,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     x.start()
 
     while True:
-        print("Msg received")
+        # print("Msg received")
         try:
             events = sel.select(timeout=None)  # sel.select(timeout=None) blocks until there are incoming messages.
             for key, mask in events:

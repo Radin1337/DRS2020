@@ -1,4 +1,5 @@
 import time
+
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5.QtGui import *
@@ -191,7 +192,7 @@ class GameWindow(QMainWindow):
                 cought_key = e.key()
                 if cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
                     self.KeyStrokes.append(cought_key)
-                    sendString = "Command/{0}/{1}/{2};".format(cought_key, self.myUniqueID, 0)  # kasnije resiti id zmije
+                    sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID, 0)  # kasnije resiti id zmije
                     self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
@@ -207,9 +208,9 @@ class GameWindow(QMainWindow):
 
     @pyqtSlot()
     def receive_from_collision_worker(self):
-        print("Signal from collision worker recieved")
+        # print("Signal from collision worker recieved")
         self.update()
-        print(self.signalFromCollision)
+        # print(self.signalFromCollision)
         self.signalFromCollision = self.signalFromCollision + 1
 
     @pyqtSlot()
@@ -219,8 +220,11 @@ class GameWindow(QMainWindow):
         messages = raw_data.split(";")
 
         for message in messages[:-1]:
-            print("Received: ", message)
+            # print("Received: ", message)
             if "Playing" in message:
+                # da obavi i poslednji korak prethodnog igraca pre nego se igra nastavi i promene bitni parametri
+                time.sleep(0.5)
+                self.KeyStrokes.clear() # moze se desiti da zaostanu neki key-evi u listi i dodje do desinhronizacije
                 splitlist = message.split("/")
                 playerNumber = int(splitlist[1])
                 self.currentIDPlaying = playerNumber
@@ -239,16 +243,23 @@ class GameWindow(QMainWindow):
                 self.drop_food(xf, yf)
             elif "Command" in message:
                 splitlist = message.split("/")
-                keyNumber = splitlist[1]
+                key = splitlist[1]
                 commandPlayerID = int(splitlist[2])
                 commandSnakeID = int(splitlist[3])
-                print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(keyNumber, commandPlayerID,
+                print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(key, commandPlayerID,
                                                                                    commandSnakeID))
-                #self.PlayerSnakeId[0] = commandPlayerID
-                #self.PlayerSnakeId[1] = commandSnakeID
-                self.KeyStrokes.append(keyNumber)
-                #time.sleep(0.003)
-                #self.update()
+                self.PlayerSnakeId[0] = commandPlayerID
+                self.PlayerSnakeId[1] = commandSnakeID
+
+                if key == 'Left':
+                    self.KeyStrokes.append(Qt.Key_Left)
+                elif key == 'Right':
+                    self.KeyStrokes.append(Qt.Key_Right)
+                elif key == 'Up':
+                    self.KeyStrokes.append(Qt.Key_Up)
+                elif key == 'Down':
+                    self.KeyStrokes.append(Qt.Key_Down)
+
             elif message == "":
                 pass
             else:
