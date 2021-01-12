@@ -120,7 +120,7 @@ class CollisionProcess(mp.Process):
                 return False
             else:
                 for head in range(len(all_heads)):
-                    if my_head[0] - 1 == all_heads[head][0] and my_head[1] + 1 == all_heads[head][1]:
+                    if my_head[0] == all_heads[head][0] and my_head[1] + 1 == all_heads[head][1]:
                         return False
             return True
 

@@ -87,10 +87,7 @@ class GameWindow(QMainWindow):
 
         self.init_map()
 
-        self.ListOfPlayers = []
-        self.init_players()
-
-        self.Players = {PlayerID: [] for PlayerID in self.ListOfPlayers}
+        self.Players = {PlayerID: [] for PlayerID in range(0, numberOfPlayers)}
         self.init_snakes()
 
         self.Food = []
@@ -111,7 +108,6 @@ class GameWindow(QMainWindow):
         self.eatFoodWorker.start()
         self.signalCounter = 0
 
-        self.SnakeOnMove = self.Players[self.ListOfPlayers[self.myUniqueID]][0]
         self.KeyStrokes = []
         # Setting up process and worker to check up on collisions
         self.in_queue_collision = Queue()
@@ -120,8 +116,10 @@ class GameWindow(QMainWindow):
         self.CollisionProcess = CollisionProcess(self.in_queue_collision, self.out_queue_collision)
         self.CollisionProcess.start()
 
-        self.CollisionWorker = CollisionWorker(self.SnakeOnMove, self.grid, self.KeyStrokes, self.Snakes,
-                                               self.in_queue_collision, self.out_queue_collision)
+        #self.SnakeOnMove = self.Players[self.myUniqueID][0]
+        self.PlayerSnakeId = [self.myUniqueID, 0]
+        self.CollisionWorker = CollisionWorker(self.Players, self.PlayerSnakeId, self.grid, self.KeyStrokes,
+                                               self.Snakes, self.in_queue_collision, self.out_queue_collision)
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
         self.CollisionWorker.start()
         self.signalFromCollision = 0
@@ -188,7 +186,7 @@ class GameWindow(QMainWindow):
 
     def keyPressEvent(self, e: QKeyEvent):
         if self.myUniqueID == self.currentIDPlaying:
-            if len(self.Players[self.ListOfPlayers[0]]) != 0:
+            if len(self.Players[self.myUniqueID]) != 0:
                 # ovde takodje trebaju provere da se registruju samo dozvoljeni tasteri
                 cought_key = e.key()
                 if cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
@@ -210,13 +208,6 @@ class GameWindow(QMainWindow):
     @pyqtSlot()
     def receive_from_collision_worker(self):
         print("Signal from collision worker recieved")
-        if len(self.Players[self.ListOfPlayers[0]]) != 0:
-            if not self.Players[self.ListOfPlayers[0]][0].killed:
-                self.Players[self.ListOfPlayers[0]][0] = self.SnakeOnMove
-            else:
-                self.Snakes.remove(self.Players[self.ListOfPlayers[0]][0])
-                self.Players[self.ListOfPlayers[0]].remove(self.Players[self.ListOfPlayers[0]][0])
-
         self.update()
         print(self.signalFromCollision)
         self.signalFromCollision = self.signalFromCollision + 1
@@ -239,6 +230,8 @@ class GameWindow(QMainWindow):
                 if self.firstTimeGotID:
                     self.timerForMove.start(1000, self)
                     self.firstTimeGotID = False
+                self.PlayerSnakeId[0] = self.currentIDPlaying
+                self.PlayerSnakeId[1] = 0
             elif "DropFood" in message:
                 splitlist = message.split("/")
                 xf = int(splitlist[1])
@@ -251,6 +244,11 @@ class GameWindow(QMainWindow):
                 commandSnakeID = int(splitlist[3])
                 print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(keyNumber, commandPlayerID,
                                                                                    commandSnakeID))
+                #self.PlayerSnakeId[0] = commandPlayerID
+                #self.PlayerSnakeId[1] = commandSnakeID
+                self.KeyStrokes.append(keyNumber)
+                #time.sleep(0.003)
+                #self.update()
             elif message == "":
                 pass
             else:
