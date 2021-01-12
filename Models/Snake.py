@@ -8,28 +8,31 @@ import sys
 
 
 class Head(Block):
-    def __init__(self, parent, moved=RotateDegrees.Right):
+    def __init__(self, parent, moved=RotateDegrees.Right, picture="resources/head.png"):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = BlockType.Head
         parent.RDegrees = moved
+        parent.SnakePart = picture
         self.degree = parent.RDegrees
 
 
 class Body(Block):
-    def __init__(self, parent, moved=RotateDegrees.Right, blk=BlockType.Body):
+    def __init__(self, parent, moved=RotateDegrees.Right, blk=BlockType.Body, picture="resources/body.png"):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = blk
         parent.RDegrees = moved
+        parent.SnakePart = picture
         self.degree = parent.RDegrees
         self.BlkType = parent.BType
 
 
 class Tail(Block):
-    def __init__(self, parent, moved=RotateDegrees.Right):
+    def __init__(self, parent, moved=RotateDegrees.Right, picture="resources/tail.png"):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = BlockType.Tail
         self.BType = BlockType.Tail
         parent.RDegrees = moved
+        parent.SnakePart = picture
         self.degree = parent.RDegrees
 
 
@@ -41,6 +44,10 @@ class Snake:
         self.eat = 0
         self.last_move = 'r'
         self.killed = False
+        self.headPicture = ""
+        self.bodyPicture = ""
+        self.curvedBodyPicture = ""
+        self.tailPicture = ""
 
     def move(self, grid, direction):           
         # Smestamo postojece delove tela u lokalne promenljive
@@ -58,16 +65,16 @@ class Snake:
         # ------------------------------------- 
         if direction == 'u':
             new_head_position = grid.itemAtPosition(x - 1, y).widget()
-            self.head = Head(new_head_position, RotateDegrees.Up)
+            self.head = Head(new_head_position, RotateDegrees.Up, self.headPicture)
         elif direction == 'd':
             new_head_position = grid.itemAtPosition(x + 1, y).widget()
-            self.head = Head(new_head_position, RotateDegrees.Down)
+            self.head = Head(new_head_position, RotateDegrees.Down, self.headPicture)
         elif direction == 'l':
             new_head_position = grid.itemAtPosition(x, y - 1).widget()
-            self.head = Head(new_head_position, RotateDegrees.Left)
+            self.head = Head(new_head_position, RotateDegrees.Left, self.headPicture)
         elif direction == 'r':
             new_head_position = grid.itemAtPosition(x, y + 1).widget()
-            self.head = Head(new_head_position)
+            self.head = Head(new_head_position, RotateDegrees.Right, self.headPicture)
 
         # Cuvamo vrednosti opet zbog bolje preglednosti dalje
         old_degree = saved_head.degree
@@ -84,13 +91,19 @@ class Snake:
             else:
                 right_degree = old_degree
 
-            self.body.append(Body(new_body_position, right_degree, blk_type))
+            if blk_type == BlockType.CurvedBody:
+                self.body.append(Body(new_body_position, right_degree, blk_type, self.curvedBodyPicture))
+            else:
+                self.body.append(Body(new_body_position, right_degree, blk_type, self.bodyPicture))
             self.eat = 0
         else:
             for i in range(0, len(self.body) - 1):
                 new_body_position = grid.itemAtPosition(self.body[i + 1].x,
                                                         self.body[i + 1].y).widget()
-                self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType)
+                if self.body[i + 1].BlkType == BlockType.CurvedBody:
+                    self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType, self.curvedBodyPicture)
+                else:
+                    self.body[i] = Body(new_body_position, self.body[i + 1].degree, self.body[i + 1].BlkType, self.bodyPicture)
 
             new_body_position = grid.itemAtPosition(x, y).widget()
             if old_degree != new_degree:
@@ -98,12 +111,16 @@ class Snake:
                 blk_type = BlockType.CurvedBody
             else:
                 right_degree = old_degree
-            self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type)
+
+            if blk_type == BlockType.CurvedBody:
+                self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type, self.curvedBodyPicture)
+            else:
+                self.body[len(self.body) - 1] = Body(new_body_position, right_degree, blk_type, self.bodyPicture)
 
             # Odredjujemo novu poziciju  repa
             new_tail_position = grid.itemAtPosition(saved_body[0].x, saved_body[0].y).widget()
             tail_degree = self.tail_rotation(saved_body, saved_head, saved_tail)
-            self.tail = Tail(new_tail_position, tail_degree)
+            self.tail = Tail(new_tail_position, tail_degree, self.tailPicture)
 
             # Brisemo stari rep
             clean_block = grid.itemAtPosition(saved_tail.x, saved_tail.y).widget()
@@ -170,26 +187,45 @@ class Snake:
             body_position = grid.itemAtPosition(0 + snake_id, 1).widget()
             tail_position = grid.itemAtPosition(0 + snake_id, 0).widget()
             self.last_move = 'r'
+            self.headPicture = "resources/head.png"
+            self.bodyPicture = "resources/body.png"
+            self.curvedBodyPicture = "resources/curvedbody.png"
+            self.tailPicture = "resources/tail.png"
+
         elif player_id == 1:
             head_position = grid.itemAtPosition(0 + snake_id, 12).widget()
             body_position = grid.itemAtPosition(0 + snake_id, 13).widget()
             tail_position = grid.itemAtPosition(0 + snake_id, 14).widget()
             need_to_rotate = RotateDegrees.Left
             self.last_move = 'l'
+            self.headPicture = "resources/head2.png"
+            self.bodyPicture = "resources/body2.png"
+            self.curvedBodyPicture = "resources/curvedbody2.png"
+            self.tailPicture = "resources/tail2.png"
+
         elif player_id == 2:
             head_position = grid.itemAtPosition(14 - snake_id, 2).widget()
             body_position = grid.itemAtPosition(14 - snake_id, 1).widget()
             tail_position = grid.itemAtPosition(14 - snake_id, 0).widget()
             self.last_move = 'r'
+            self.headPicture = "resources/head3.png"
+            self.bodyPicture = "resources/body3.png"
+            self.curvedBodyPicture = "resources/curvedbody3.png"
+            self.tailPicture = "resources/tail3.png"
+
         else:
             head_position = grid.itemAtPosition(14 - snake_id, 12).widget()
             body_position = grid.itemAtPosition(14 - snake_id, 13).widget()
             tail_position = grid.itemAtPosition(14 - snake_id, 14).widget()
             need_to_rotate = RotateDegrees.Left
             self.last_move = 'l'
+            self.headPicture = "resources/head4.png"
+            self.bodyPicture = "resources/body4.png"
+            self.curvedBodyPicture = "resources/curvedbody4.png"
+            self.tailPicture = "resources/tail4.png"
 
-        self.head = Head(head_position, need_to_rotate)
-        self.body.append(Body(body_position, need_to_rotate))
-        self.tail = Tail(tail_position, need_to_rotate)
+        self.head = Head(head_position, need_to_rotate, self.headPicture)
+        self.body.append(Body(body_position, need_to_rotate, BlockType.Body, self.bodyPicture))
+        self.tail = Tail(tail_position, need_to_rotate, self.tailPicture)
 
         return self
