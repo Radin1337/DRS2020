@@ -175,6 +175,9 @@ class GameWindow(QMainWindow):
             playerNumber = self.currentIDPlaying + 1
             self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber,
                                                                                        self.timeCounter))
+            if self.timeCounter <= 0:
+                self.whoIsPlayingLabel.setText("Playing: Changing Player")
+                self.currentIDPlaying = -1 #blocking players till turn change
 
     def drop_food(self, x, y):
         b = self.grid.itemAtPosition(x, y).widget()
@@ -229,7 +232,7 @@ class GameWindow(QMainWindow):
                 playerNumber = int(splitlist[1])
                 self.currentIDPlaying = playerNumber
                 playerNumber = playerNumber+1  # for nice print
-                self.timeCounter = 10
+                self.timeCounter = 11
                 self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber, self.timeCounter))
                 if self.firstTimeGotID:
                     self.timerForMove.start(1000, self)

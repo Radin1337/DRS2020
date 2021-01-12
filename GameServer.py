@@ -71,7 +71,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
 
 def changePlayerAndSpawnFood(start_id, numberofplayers):
     time.sleep(1)
-    counterFood = 0  # Every time when its 2, its passed 20 second so spawn food
+    counterFood = 0  # Every time when its 2, its passed 22 second so spawn food
     firstTime = True
     print("Thread started")
     while True:
@@ -96,7 +96,7 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
             start_id = (start_id+1) % numberofplayers
 
             print(len(PlayerSockets))
-            time.sleep(10)
+            time.sleep(11)
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
