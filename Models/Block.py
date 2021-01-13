@@ -20,6 +20,7 @@ class Block(QWidget):
         self.BType = BlockType.EmptyBlock
         self.RDegrees = RotateDegrees.Right
         self.SnakePart = ""
+        self.OnMove = False
 
     def paintEvent(self, event):
         p = QPainter(self)
@@ -47,6 +48,8 @@ class Block(QWidget):
             p.drawPixmap(r, self.rotate_picture(self.SnakePart))
         elif self.BType == BlockType.Tail:
             p.drawPixmap(r, self.rotate_picture(self.SnakePart))
+            if self.OnMove:
+                p.drawPixmap(r, self.rotate_picture("resources/pointer.png"))
         elif self.BType == BlockType.CurvedBody:
             p.drawPixmap(r, self.rotate_picture(self.SnakePart))
 

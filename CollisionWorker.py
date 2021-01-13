@@ -17,9 +17,9 @@ class CollisionWorker(Worker):
     def work(self):
         while True:
             if self.ps_id and self.players[self.ps_id[0]]:
-                p_id = self.ps_id[0]
-                s_id = self.ps_id[1]
-                snake = self.players[p_id][s_id]
+                #p_id = self.ps_id[0]
+                #s_id = self.ps_id[1]
+                snake = self.players[self.ps_id[0]][self.ps_id[1]]
                 temp_head = [snake.head.x, snake.head.y]
                 temp_tails = list(map(lambda s: [s.tail.x, s.tail.y], self.all_snakes))
                 temp_body_parts = []
@@ -34,8 +34,9 @@ class CollisionWorker(Worker):
                     if not isinstance(ret_val[0], str):
                         if snake.head.x == ret_val[0] and snake.head.y == ret_val[1]:
                             self.all_snakes.remove(snake)
-                            self.players[p_id].remove(snake)
+                            self.players[self.ps_id[0]].remove(snake)
                             snake.kill_snake(self.grid)
+                            self.ps_id[1] = 0
                             self.keys.remove(ret_val[2])
                     else:
                         if not ret_val[0] == '':

@@ -119,6 +119,7 @@ class GameWindow(QMainWindow):
 
         #self.SnakeOnMove = self.Players[self.myUniqueID][0]
         self.PlayerSnakeId = [self.myUniqueID, 0]
+        self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
         self.CollisionWorker = CollisionWorker(self.Players, self.PlayerSnakeId, self.grid, self.KeyStrokes,
                                                self.Snakes, self.in_queue_collision, self.out_queue_collision)
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
@@ -191,11 +192,18 @@ class GameWindow(QMainWindow):
     def keyPressEvent(self, e: QKeyEvent):
         if self.myUniqueID == self.currentIDPlaying:
             if len(self.Players[self.myUniqueID]) != 0:
-                # ovde takodje trebaju provere da se registruju samo dozvoljeni tasteri
                 cought_key = e.key()
-                if cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
+                if cought_key == Qt.Key_Space:
+                    self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
+                    self.PlayerSnakeId[1] += 1
+                    if self.PlayerSnakeId[1] == len(self.Players[self.myUniqueID]):
+                        self.PlayerSnakeId[1] = 0
+                    self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
+                    self.update()
+                elif cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
                     self.KeyStrokes.append(cought_key)
-                    sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID, 0)  # kasnije resiti id zmije
+                    sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID,
+                                                               self.PlayerSnakeId[1])  # kasnije resiti id zmije
                     self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
@@ -237,6 +245,14 @@ class GameWindow(QMainWindow):
                 if self.firstTimeGotID:
                     self.timerForMove.start(1000, self)
                     self.firstTimeGotID = False
+
+                if self.currentIDPlaying == self.myUniqueID:
+                    for s in range(0, len(self.Players[self.myUniqueID])):
+                        if self.Players[self.myUniqueID][s].OnMove == True:
+                            self.Players[self.myUniqueID][s].on_off_move(self.grid)
+                    self.Players[self.myUniqueID][0].on_off_move(self.grid)
+                    self.update()
+
                 self.PlayerSnakeId[0] = self.currentIDPlaying
                 self.PlayerSnakeId[1] = 0
             elif "DropFood" in message:

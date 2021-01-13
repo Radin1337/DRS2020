@@ -27,12 +27,13 @@ class Body(Block):
 
 
 class Tail(Block):
-    def __init__(self, parent, moved=RotateDegrees.Right, picture="resources/tail.png"):
+    def __init__(self, parent, moved=RotateDegrees.Right, picture="resources/tail.png", pointer=False):
         Block.__init__(self, parent.x, parent.y)
         parent.BType = BlockType.Tail
         self.BType = BlockType.Tail
         parent.RDegrees = moved
         parent.SnakePart = picture
+        parent.OnMove = pointer
         self.degree = parent.RDegrees
 
 
@@ -48,6 +49,7 @@ class Snake:
         self.bodyPicture = ""
         self.curvedBodyPicture = ""
         self.tailPicture = ""
+        self.OnMove = False
 
     def move(self, grid, direction):           
         # Smestamo postojece delove tela u lokalne promenljive
@@ -120,7 +122,7 @@ class Snake:
             # Odredjujemo novu poziciju  repa
             new_tail_position = grid.itemAtPosition(saved_body[0].x, saved_body[0].y).widget()
             tail_degree = self.tail_rotation(saved_body, saved_head, saved_tail)
-            self.tail = Tail(new_tail_position, tail_degree, self.tailPicture)
+            self.tail = Tail(new_tail_position, tail_degree, self.tailPicture, self.OnMove)
 
             # Brisemo stari rep
             clean_block = grid.itemAtPosition(saved_tail.x, saved_tail.y).widget()
@@ -226,6 +228,14 @@ class Snake:
 
         self.head = Head(head_position, need_to_rotate, self.headPicture)
         self.body.append(Body(body_position, need_to_rotate, BlockType.Body, self.bodyPicture))
-        self.tail = Tail(tail_position, need_to_rotate, self.tailPicture)
+        self.tail = Tail(tail_position, need_to_rotate, self.tailPicture, self.OnMove)
 
         return self
+
+    def on_off_move(self, grid):
+        if self.OnMove:
+            self.OnMove = False
+        else:
+            self.OnMove = True
+        block = grid.itemAtPosition(self.tail.x, self.tail.y).widget()
+        block.OnMove = self.OnMove
