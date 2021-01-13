@@ -102,7 +102,7 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
             if counterFood == 2:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
                 counterFood = 0
-                fsts = "DropFood/{0}/{1};".format(0, 0)
+                fsts = "DropFood/{0}/{1};".format(xf, yf)
                 with lock:
                     for sck in PlayerSockets:
                         sck.send(fsts.encode())
