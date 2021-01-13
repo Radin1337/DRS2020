@@ -40,7 +40,11 @@ class CollisionWorker(Worker):
                     else:
                         if not ret_val[0] == '':
                             snake.move(self.grid, ret_val[0])
-                        self.keys.remove(ret_val[1])
+                        try:
+                            self.keys.remove(ret_val[1])
+                        except Exception:
+                            pass
+
                     self.update.emit()
 
                     while not self.output_q.empty():

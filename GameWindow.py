@@ -168,7 +168,6 @@ class GameWindow(QMainWindow):
         else:
             event.ignore()
 
-    # Possibly we are gonna need to move this to some worker class thread but this is for starting purposes only.
     def timerEvent(self, event):
         if self.timerForMove.timerId() == event.timerId():  # One second passed
             self.timeCounter = self.timeCounter - 1
@@ -186,7 +185,9 @@ class GameWindow(QMainWindow):
             self.Food.append(Food(b))
             self.update()
         else:
-            self.drop_food(x+1, y+1) #ovde cemo vrv zahtevati od servera drugi drop
+            sendFoodReq = "FoodRequest/{0};".format(self.myUniqueID)  # request and id to see is player coord
+            self.comms_to_send_queue.put(sendFoodReq)
+            time.sleep(0.05)
 
     def keyPressEvent(self, e: QKeyEvent):
         if self.myUniqueID == self.currentIDPlaying:
@@ -218,12 +219,12 @@ class GameWindow(QMainWindow):
 
     @pyqtSlot()
     def receive_from_communication_worker(self):
-        print("Signal from comm worker received")
+        # print("Signal from comm worker received")
         raw_data = self.comms_to_receive_queue.get()
         messages = raw_data.split(";")
 
         for message in messages[:-1]:
-            # print("Received: ", message)
+            print("Received: ", message)
             if "Playing" in message:
                 # da obavi i poslednji korak prethodnog igraca pre nego se igra nastavi i promene bitni parametri
                 time.sleep(0.5)
@@ -249,8 +250,7 @@ class GameWindow(QMainWindow):
                 key = splitlist[1]
                 commandPlayerID = int(splitlist[2])
                 commandSnakeID = int(splitlist[3])
-                print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(key, commandPlayerID,
-                                                                                   commandSnakeID))
+                #  print("Command received: {0}, Player ID: {1}, Snake ID:{2}".format(key, commandPlayerID,commandSnakeID))
                 self.PlayerSnakeId[0] = commandPlayerID
                 self.PlayerSnakeId[1] = commandSnakeID
 
