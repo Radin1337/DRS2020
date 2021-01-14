@@ -4,8 +4,9 @@ import time
 
 
 class CollisionWorker(Worker):
-    def __init__(self, players, player_snake_id, grid, keys, all_snakes, input_q: mp.Queue, output_q: mp.Queue):
+    def __init__(self, uid, players, player_snake_id, grid, keys, all_snakes, input_q: mp.Queue, output_q: mp.Queue):
         super().__init__()
+        self.myUniqueId = uid
         self.ps_id = player_snake_id
         self.players = players
         self.grid = grid
@@ -38,6 +39,8 @@ class CollisionWorker(Worker):
                             snake.kill_snake(self.grid)
                             self.ps_id[1] = 0
                             self.keys.remove(ret_val[2])
+                            if self.players[self.ps_id[0]] and self.myUniqueId == self.ps_id[0]:
+                                self.players[self.ps_id[0]][0].on_off_move(self.grid)
                     else:
                         if not ret_val[0] == '':
                             snake.move(self.grid, ret_val[0])

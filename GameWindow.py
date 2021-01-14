@@ -120,8 +120,9 @@ class GameWindow(QMainWindow):
         #self.SnakeOnMove = self.Players[self.myUniqueID][0]
         self.PlayerSnakeId = [self.myUniqueID, 0]
         self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
-        self.CollisionWorker = CollisionWorker(self.Players, self.PlayerSnakeId, self.grid, self.KeyStrokes,
-                                               self.Snakes, self.in_queue_collision, self.out_queue_collision)
+        self.CollisionWorker = CollisionWorker(self.myUniqueID, self.Players, self.PlayerSnakeId, self.grid,
+                                               self.KeyStrokes, self.Snakes, self.in_queue_collision,
+                                               self.out_queue_collision)
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
         self.CollisionWorker.start()
         self.signalFromCollision = 0
@@ -248,7 +249,7 @@ class GameWindow(QMainWindow):
 
                 if self.currentIDPlaying == self.myUniqueID:
                     for s in range(0, len(self.Players[self.myUniqueID])):
-                        if self.Players[self.myUniqueID][s].OnMove == True:
+                        if self.Players[self.myUniqueID][s].OnMove:
                             self.Players[self.myUniqueID][s].on_off_move(self.grid)
                     self.Players[self.myUniqueID][0].on_off_move(self.grid)
                     self.update()
