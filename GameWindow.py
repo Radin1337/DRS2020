@@ -41,6 +41,13 @@ class GameWindow(QMainWindow):
         self.numOfPlayers = numberOfPlayers
         self.numOfSnakes = numberOfSnakes
 
+        # added more variables to track current and max moves of player
+        self.maxMovesPerSnake = []
+        self.movesMadePerSnake = []
+        for i in range(numberOfSnakes):  # at start all snakes have max 2 moves
+            self.maxMovesPerSnake.append(2)
+            self.movesMadePerSnake.append(0)
+
         # setting geometry to the window
         # screen = QDesktopWidget().screenGeometry()
         # self.setGeometry(100, 100, screen.width(), screen.height())
@@ -202,10 +209,12 @@ class GameWindow(QMainWindow):
                     self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
                     self.update()
                 elif cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
-                    self.KeyStrokes.append(cought_key)
-                    sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID,
-                                                               self.PlayerSnakeId[1])  # kasnije resiti id zmije
-                    self.comms_to_send_queue.put(sendString)
+                    if self.movesMadePerSnake[self.PlayerSnakeId[1]] < self.maxMovesPerSnake[self.PlayerSnakeId[1]]:
+                        self.KeyStrokes.append(cought_key)
+                        sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID,
+                                                                   self.PlayerSnakeId[1])  # kasnije resiti id zmije
+                        self.movesMadePerSnake[self.PlayerSnakeId[1]] = self.movesMadePerSnake[self.PlayerSnakeId[1]] + 1
+                        self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
     @pyqtSlot()
@@ -243,6 +252,8 @@ class GameWindow(QMainWindow):
                 playerNumber = playerNumber+1  # for nice print
                 self.timeCounter = 11
                 self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber, self.timeCounter))
+                for i in range(self.numOfSnakes):
+                    self.movesMadePerSnake[i] = 0
                 if self.firstTimeGotID:
                     self.timerForMove.start(1000, self)
                     self.firstTimeGotID = False
