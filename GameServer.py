@@ -21,6 +21,11 @@ numberOfSnakesString = sys.argv[2]
 numberOfSnakes = int(numberOfSnakesString[15:])
 PlayerSockets = []
 
+PlayersAliveStatus = []
+PlayerCoordinator = 0  # when first player dies, second became coord
+for i in range(numberOfPlayers):
+    PlayersAliveStatus.append(True)
+
 timerMove = QTimer()
 
 print("Server starting. Number of players: {0}. Number of snakes per each player: {1}".format(int(numberOfPlayers),
@@ -53,6 +58,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                 recvString = recv_data.decode()
                 messages = recvString.split(";")
                 for message in messages[:-1]:
+                    # print("Server received: ", message)
                     if "Command" in message:
                         splitStrings = message.split("/")
                         command = splitStrings[1]
@@ -62,6 +68,16 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                         for sck in PlayerSockets:
                             if sck != PlayerSockets[int(playerID)]:
                                 sck.send(stsc.encode())
+                    elif "FoodRequest" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        reqID = int(splitStrings[1])
+                        if reqID == PlayerCoordinator:
+                            xf, yf = random.randint(0, 14), random.randint(0, 14)
+                            counterFood = 0
+                            fsts = "DropFood/{0}/{1};".format(xf, yf)
+                            for sck in PlayerSockets:
+                                sck.send(fsts.encode())
                     else:
                         print("Message not recognized.")
             else:
@@ -72,7 +88,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
 
 def changePlayerAndSpawnFood(start_id, numberofplayers):
     time.sleep(1)
-    counterFood = 0  # Every time when its 2, its passed 22 second so spawn food
+    counterFood = 2  # Every time when its 2, its passed 22 second so spawn food
     firstTime = True
     print("Thread started")
     while True:
@@ -121,7 +137,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             events = sel.select(timeout=None)  # sel.select(timeout=None) blocks until there are incoming messages.
             for key, mask in events:
                 receive_message(key, mask)
-        except Exception:
+        except Exception as e:
+            print(e)
             print("Server shutting down.")
             break
     exit(0)
