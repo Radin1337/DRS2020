@@ -42,10 +42,14 @@ class GameWindow(QMainWindow):
         self.numOfSnakes = numberOfSnakes
 
         # added more variables to track current and max moves of player
+        # at start all snakes have max 2 moves [ [p1s1,p1s2,p1s3], [p2s1,p2s2,p2s3] ]
+        # self.maxMovesPerSnake = [[0] * numberOfSnakes for i in range(numberOfPlayers)]
+        # self.movesMadePerSnake = [[0] * numberOfSnakes for i in range(numberOfPlayers)]
         self.maxMovesPerSnake = []
         self.movesMadePerSnake = []
-        for i in range(numberOfSnakes):  # at start all snakes have max 2 moves
-            self.maxMovesPerSnake.append(2)
+        self.amIDead = False
+        for i in range(self.numOfSnakes):
+            self.maxMovesPerSnake.append(3)
             self.movesMadePerSnake.append(0)
 
         # setting geometry to the window
@@ -71,7 +75,7 @@ class GameWindow(QMainWindow):
 
         self.iAmLabel = QLabel()
         self.iAmLabel.setFont(QFont('Times', 14))
-        self.iAmLabel.setText("I am Player {0}".format(self.myUniqueID+1))
+        self.iAmLabel.setText("I am Player {0}".format(self.myUniqueID + 1))
         self.iAmLabel.setAlignment(Qt.AlignHCenter)
         vb.addWidget(self.iAmLabel)
         self.whoIsPlayingLabel = QLabel()
@@ -101,6 +105,8 @@ class GameWindow(QMainWindow):
         self.Food = []
         self.Snakes = []
 
+        self.PlayerSnakeId = [self.myUniqueID, 0]
+
         for i in range(numberOfPlayers):
             self.Snakes.extend(self.Players[i])
 
@@ -110,8 +116,8 @@ class GameWindow(QMainWindow):
         self.EatFoodProcess = ProcessEatFood(self.in_queue_eatfood, self.out_queue_eatfood)
         self.EatFoodProcess.start()
 
-        self.eatFoodWorker = WorkerEatFood(self.Food, self.Snakes, self.in_queue_eatfood, self.out_queue_eatfood,
-                                           self.grid)
+        self.eatFoodWorker = WorkerEatFood(self.Food, self.Snakes, self.maxMovesPerSnake, self.PlayerSnakeId,
+                                           self.myUniqueID, self.in_queue_eatfood, self.out_queue_eatfood, self.grid)
         self.eatFoodWorker.update.connect(self.receive_from_eatfood_worker)
         self.eatFoodWorker.start()
         self.signalCounter = 0
@@ -124,11 +130,12 @@ class GameWindow(QMainWindow):
         self.CollisionProcess = CollisionProcess(self.in_queue_collision, self.out_queue_collision)
         self.CollisionProcess.start()
 
-        #self.SnakeOnMove = self.Players[self.myUniqueID][0]
-        self.PlayerSnakeId = [self.myUniqueID, 0]
+        # self.SnakeOnMove = self.Players[self.myUniqueID][0]
+
         self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
         self.CollisionWorker = CollisionWorker(self.myUniqueID, self.Players, self.PlayerSnakeId, self.grid,
-                                               self.KeyStrokes, self.Snakes, self.in_queue_collision,
+                                               self.KeyStrokes, self.Snakes, self.maxMovesPerSnake,
+                                               self.movesMadePerSnake, self.in_queue_collision,
                                                self.out_queue_collision)
         self.CollisionWorker.update.connect(self.receive_from_collision_worker)
         self.CollisionWorker.start()
@@ -181,11 +188,58 @@ class GameWindow(QMainWindow):
         if self.timerForMove.timerId() == event.timerId():  # One second passed
             self.timeCounter = self.timeCounter - 1
             playerNumber = self.currentIDPlaying + 1
-            self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber,
-                                                                                       self.timeCounter))
+            if not self.amIDead:
+                self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber,
+                                                                                           self.timeCounter))
+            else:
+                self.whoIsPlayingLabel.setStyleSheet("QLabel { color : red; }")
+                self.whoIsPlayingLabel.setText(
+                    "You are dead.Waiting for others to finish.\nPlaying: Player {0}\nTime left:{1}".format(
+                        playerNumber,
+                        self.timeCounter))
             if self.timeCounter <= 0:
                 self.whoIsPlayingLabel.setText("Playing: Changing Player")
-                self.currentIDPlaying = -1 #blocking players till turn change
+                self.currentIDPlaying = -1  # blocking players till turn change
+                for i in range(len(self.Food)):
+                    currX = self.Food[i].x
+                    currY = self.Food[i].y
+                    found = False
+                    securityCounter = 0
+                    b = self.grid.itemAtPosition(currX, currY).widget()
+                    while True:
+                        delta = random.randint(-4, 4)
+                        xyChoose = random.randint(0, 1)
+                        if xyChoose == 0:
+                            newX = currX + delta
+                            newY = currY
+                            if newX <= 14 and newY <= 14 and newY >= 0 and newX >= 0:
+                                b = self.grid.itemAtPosition(newX, newY).widget()
+                                if b.BType == BlockType.EmptyBlock:
+                                    found = True
+                                    break
+                                if securityCounter == 20:
+                                    break
+                                else:
+                                    securityCounter = securityCounter + 1
+                        else:
+                            newX = currX
+                            newY = currY + delta
+                            if newX <= 14 and newY <= 14 and newY >= 0 and newX >= 0:
+                                b = self.grid.itemAtPosition(newX, newY).widget()
+                                if b.BType == BlockType.EmptyBlock:
+                                    found = True
+                                    break
+                                if securityCounter == 20:
+                                    break
+                                else:
+                                    securityCounter = securityCounter + 1
+
+                    if found:
+                        sendMoveFoodReq = "MoveFood/{0}/{1}/{2}/{3}/{4};".format(self.myUniqueID, currX,
+                                                                                 currY, newX, newY)
+
+                        self.comms_to_send_queue.put(sendMoveFoodReq)
+                        time.sleep(0.05)
 
     def drop_food(self, x, y):
         b = self.grid.itemAtPosition(x, y).widget()
@@ -210,11 +264,15 @@ class GameWindow(QMainWindow):
                     self.Players[self.myUniqueID][self.PlayerSnakeId[1]].on_off_move(self.grid)
                     self.update()
                 elif cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
-                    if self.movesMadePerSnake[self.PlayerSnakeId[1]] < self.maxMovesPerSnake[self.PlayerSnakeId[1]]:
+                    if self.movesMadePerSnake[self.PlayerSnakeId[1]] \
+                            < self.maxMovesPerSnake[self.PlayerSnakeId[1]]:
                         self.KeyStrokes.append(cought_key)
                         sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID,
                                                                    self.PlayerSnakeId[1])  # kasnije resiti id zmije
-                        self.movesMadePerSnake[self.PlayerSnakeId[1]] = self.movesMadePerSnake[self.PlayerSnakeId[1]] + 1
+                        self.movesMadePerSnake[self.PlayerSnakeId[1]] = \
+                            self.movesMadePerSnake[self.PlayerSnakeId[1]] + 1
+                        #  print("Move made.")
+                        #  print(self.movesMadePerSnake)
                         self.comms_to_send_queue.put(sendString)
                 time.sleep(0.05)
 
@@ -230,8 +288,18 @@ class GameWindow(QMainWindow):
 
     @pyqtSlot()
     def receive_from_collision_worker(self):
-        # print("Signal from collision worker recieved")
+        print("Signal from collision worker recieved")
         self.update()
+        if len(self.Players[self.myUniqueID]) == 0:  # player died
+            iAmDead = "Died/{0};".format(self.myUniqueID)
+            self.comms_to_send_queue.put(iAmDead)
+            time.sleep(0.05)
+            playerNumber = self.currentIDPlaying + 1
+            self.amIDead = True
+            self.whoIsPlayingLabel.setStyleSheet("QLabel { color : red; }")
+            self.whoIsPlayingLabel.setText(
+                "You are dead.Waiting for others to finish.\nPlaying: Player {0}\nTime left:{1}".format(playerNumber,
+                                                                                                        self.timeCounter))
         # print(self.signalFromCollision)
         self.signalFromCollision = self.signalFromCollision + 1
 
@@ -246,14 +314,15 @@ class GameWindow(QMainWindow):
             if "Playing" in message:
                 # da obavi i poslednji korak prethodnog igraca pre nego se igra nastavi i promene bitni parametri
                 time.sleep(0.5)
-                self.KeyStrokes.clear() # moze se desiti da zaostanu neki key-evi u listi i dodje do desinhronizacije
+                self.KeyStrokes.clear()  # moze se desiti da zaostanu neki key-evi u listi i dodje do desinhronizacije
                 splitlist = message.split("/")
                 playerNumber = int(splitlist[1])
                 self.currentIDPlaying = playerNumber
-                playerNumber = playerNumber+1  # for nice print
+                playerNumber = playerNumber + 1  # for nice print
                 self.timeCounter = 11
-                self.whoIsPlayingLabel.setText("Playing: Player {0}\nTime left:{1}".format(playerNumber, self.timeCounter))
-                for i in range(self.numOfSnakes):
+                self.whoIsPlayingLabel.setText(
+                    "Playing: Player {0}\nTime left:{1}".format(playerNumber, self.timeCounter))
+                for i in range(len(self.Players[self.myUniqueID])):
                     self.movesMadePerSnake[i] = 0
                 if self.firstTimeGotID:
                     self.timerForMove.start(1000, self)
@@ -290,7 +359,31 @@ class GameWindow(QMainWindow):
                     self.KeyStrokes.append(Qt.Key_Up)
                 elif key == 'Down':
                     self.KeyStrokes.append(Qt.Key_Down)
+            elif "MoveFood" in message:
+                splitlist = message.split("/")
+                oldX = int(splitlist[1])
+                oldY = int(splitlist[2])
+                newX = int(splitlist[3])
+                newY = int(splitlist[4])
+                for f in self.Food:
+                    if f.x == oldX and f.y == oldY:
+                        self.Food.remove(f)
+                b = self.grid.itemAtPosition(oldX, oldY).widget()
+                b.BType = BlockType.EmptyBlock
+                b = self.grid.itemAtPosition(newX, newY).widget()
+                self.Food.append(Food(b))
+                self.update()
+            elif "GameOver" in message:
+                self.timerForMove.stop()
 
+                splitlist = message.split("/")
+                winnerid = int(splitlist[1])
+                if self.myUniqueID == winnerid:
+                    self.whoIsPlayingLabel.setStyleSheet("QLabel { color : blue; }")
+                    self.whoIsPlayingLabel.setText("Congratulations! You won the game!")
+                else:
+                    self.whoIsPlayingLabel.setStyleSheet("QLabel { color : red; }")
+                    self.whoIsPlayingLabel.setText("Game over. Player {0} won the game.".format(winnerid+1))
             elif message == "":
                 pass
             else:

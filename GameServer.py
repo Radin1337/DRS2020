@@ -14,7 +14,7 @@ PORT = 65432
 sel = selectors.DefaultSelector()
 
 lock = threading.Lock()
-
+GameOverSignal = False
 numberOfPlayersString = sys.argv[1]
 numberOfPlayers = int(numberOfPlayersString[16:])
 numberOfSnakesString = sys.argv[2]
@@ -22,6 +22,8 @@ numberOfSnakes = int(numberOfSnakesString[15:])
 PlayerSockets = []
 
 PlayersAliveStatus = []
+PlayersAliveCounter = numberOfPlayers
+
 PlayerCoordinator = 0  # when first player dies, second became coord
 for i in range(numberOfPlayers):
     PlayersAliveStatus.append(True)
@@ -51,6 +53,9 @@ def accept_wrapper(sock):  # Accepting clients and making sockets non-blocking
 def receive_message(key, mask):  # Handling incoming msgs from clients
     sock = key.fileobj
     data = key.data
+    global GameOverSignal
+    global PlayerCoordinator
+    global PlayersAliveCounter
     if mask & selectors.EVENT_READ:  # If we have something to receive from clients
         with lock:
             recv_data = sock.recv(1024)  # Receive
@@ -58,7 +63,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                 recvString = recv_data.decode()
                 messages = recvString.split(";")
                 for message in messages[:-1]:
-                    # print("Server received: ", message)
+                    print("Server received: ", message)
                     if "Command" in message:
                         splitStrings = message.split("/")
                         command = splitStrings[1]
@@ -78,10 +83,45 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                             fsts = "DropFood/{0}/{1};".format(xf, yf)
                             for sck in PlayerSockets:
                                 sck.send(fsts.encode())
+                    elif "MoveFood" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        reqID = int(splitStrings[1])
+                        if reqID == PlayerCoordinator:
+                            oldX = int(splitStrings[2])
+                            oldY = int(splitStrings[3])
+                            newX = int(splitStrings[4])
+                            newY = int(splitStrings[5])
+                            fsts = "MoveFood/{0}/{1}/{2}/{3};".format(oldX, oldY, newX, newY)
+                            for sck in PlayerSockets:
+                                sck.send(fsts.encode())
+                    elif "Died" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        deathId = int(splitStrings[1])
+                        if PlayersAliveStatus[deathId]:
+                            PlayersAliveCounter = PlayersAliveCounter - 1
+                            PlayersAliveStatus[deathId] = False
+                            if PlayersAliveCounter == 1:
+                                for k in range(len(PlayersAliveStatus)):
+                                    if PlayersAliveStatus[k]:
+                                        gameovermsg = "GameOver/{0};".format(k)
+                                        for sck in PlayerSockets:
+                                            sck.send(gameovermsg.encode())
+                                        GameOverSignal = True
+                                        break
+                            else:
+                                for k in range(len(PlayersAliveStatus)):
+                                    if PlayersAliveStatus[k]:
+                                        PlayerCoordinator = k
+                                        print("Changed coordinator to: ", PlayerCoordinator)
+                                        break
+
                     else:
                         print("Message not recognized.")
             else:
                 print('closing connection to', data.addr)
+                PlayerSockets.remove(sock)
                 sel.unregister(sock)
                 sock.close()
 
@@ -111,6 +151,9 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
                 counterFood = counterFood + 1
 
             start_id = (start_id+1) % numberofplayers
+            while not PlayersAliveStatus[start_id]:
+                start_id = (start_id + 1) % numberofplayers
+
 
             print(len(PlayerSockets))
             time.sleep(11)
@@ -131,7 +174,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     x.daemon = True
     x.start()
 
-    while True:
+    while not GameOverSignal:
         # print("Msg received")
         try:
             events = sel.select(timeout=None)  # sel.select(timeout=None) blocks until there are incoming messages.
@@ -141,6 +184,12 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print(e)
             print("Server shutting down.")
             break
+
+    for sock in PlayerSockets:
+        PlayerSockets.remove(sock)
+        sel.unregister(sock)
+        sock.close()
+
     exit(0)
 
 

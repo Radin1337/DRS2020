@@ -4,7 +4,7 @@ import time
 
 
 class CollisionWorker(Worker):
-    def __init__(self, uid, players, player_snake_id, grid, keys, all_snakes, input_q: mp.Queue, output_q: mp.Queue):
+    def __init__(self, uid, players, player_snake_id, grid, keys, all_snakes, maxStepsMatrix, stepsMadeMatrix, input_q: mp.Queue, output_q: mp.Queue):
         super().__init__()
         self.myUniqueId = uid
         self.ps_id = player_snake_id
@@ -14,7 +14,8 @@ class CollisionWorker(Worker):
         self.all_snakes = all_snakes
         self.input_q = input_q
         self.output_q = output_q
-
+        self.MaxSteps = maxStepsMatrix
+        self.StepsMade = stepsMadeMatrix
     def work(self):
         while True:
             if self.ps_id and self.players[self.ps_id[0]]:
@@ -39,6 +40,12 @@ class CollisionWorker(Worker):
                             snake.kill_snake(self.grid)
                             self.ps_id[1] = 0
                             self.keys.remove(ret_val[2])
+
+                            if self.ps_id[0] == self.myUniqueId:
+                                self.MaxSteps.remove(self.MaxSteps[self.ps_id[1]])
+                                self.StepsMade.remove(self.StepsMade[self.ps_id[1]])
+                                # print(self.MaxSteps)
+                                # print(self.StepsMade)
                             if self.players[self.ps_id[0]] and self.myUniqueId == self.ps_id[0]:
                                 self.players[self.ps_id[0]][0].on_off_move(self.grid)
                     else:
