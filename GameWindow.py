@@ -40,6 +40,7 @@ class GameWindow(QMainWindow):
         self.firstTimeGotID = True
         self.numOfPlayers = numberOfPlayers
         self.numOfSnakes = numberOfSnakes
+        self.afkDeadCounter = 0
 
         # added more variables to track current and max moves of player
         # at start all snakes have max 2 moves [ [p1s1,p1s2,p1s3], [p2s1,p2s2,p2s3] ]
@@ -48,6 +49,7 @@ class GameWindow(QMainWindow):
         self.maxMovesPerSnake = []
         self.movesMadePerSnake = []
         self.amIDead = False
+        self.DidIMadeMOve = False
         for i in range(self.numOfSnakes):
             self.maxMovesPerSnake.append(3)
             self.movesMadePerSnake.append(0)
@@ -198,8 +200,27 @@ class GameWindow(QMainWindow):
                         playerNumber,
                         self.timeCounter))
             if self.timeCounter <= 0:
+                if self.myUniqueID == self.currentIDPlaying:
+                    if not self.DidIMadeMOve:
+                        print("I haven't made move.")
+                        try:
+                            self.afkDeadCounter = self.afkDeadCounter + 1
+                            if self.afkDeadCounter == 3:
+                                time.sleep(0.05)
+                                playerNumber = self.currentIDPlaying + 1
+                                self.amIDead = True
+                                self.whoIsPlayingLabel.setStyleSheet("QLabel { color : red; }")
+                                self.whoIsPlayingLabel.setText(
+                                    "You are dead.Waiting for others to finish.\nPlaying: Player {0}\nTime left:{1}".format(
+                                        playerNumber,
+                                        self.timeCounter))
+                                sendAfkSignal = "AfkDisc/{0};".format(self.myUniqueID)
+                                self.comms_to_send_queue.put(sendAfkSignal)
+                        except Exception as e:
+                            pass
                 self.whoIsPlayingLabel.setText("Playing: Changing Player")
                 self.currentIDPlaying = -1  # blocking players till turn change
+                self.DidIMadeMOve = False
                 for i in range(len(self.Food)):
                     currX = self.Food[i].x
                     currY = self.Food[i].y
@@ -266,6 +287,8 @@ class GameWindow(QMainWindow):
                 elif cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
                     if self.movesMadePerSnake[self.PlayerSnakeId[1]] \
                             < self.maxMovesPerSnake[self.PlayerSnakeId[1]]:
+                        self.DidIMadeMOve = True
+                        self.afkDeadCounter = 0
                         self.KeyStrokes.append(cought_key)
                         sendString = "Command/{0}/{1}/{2};".format(QKeySequence(e.key()).toString(), self.myUniqueID,
                                                                    self.PlayerSnakeId[1])  # kasnije resiti id zmije
@@ -384,6 +407,13 @@ class GameWindow(QMainWindow):
                 else:
                     self.whoIsPlayingLabel.setStyleSheet("QLabel { color : red; }")
                     self.whoIsPlayingLabel.setText("Game over. Player {0} won the game.".format(winnerid+1))
+            elif "KillSnakes" in message:
+                splitlist = message.split("/")
+                deathid = int(splitlist[1])
+                for i in range(len(self.Players[deathid])):
+                    self.Players[deathid][i].kill_snake(self.grid)
+                self.Players[deathid].clear()
+                self.update()
             elif message == "":
                 pass
             else:

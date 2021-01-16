@@ -116,7 +116,34 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                                         PlayerCoordinator = k
                                         print("Changed coordinator to: ", PlayerCoordinator)
                                         break
-
+                    elif "AfkDisc" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        deathId = int(splitStrings[1])
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        deathId = int(splitStrings[1])
+                        if PlayersAliveStatus[deathId]:
+                            PlayersAliveCounter = PlayersAliveCounter - 1
+                            PlayersAliveStatus[deathId] = False
+                            if PlayersAliveCounter == 1:
+                                for k in range(len(PlayersAliveStatus)):
+                                    if PlayersAliveStatus[k]:
+                                        gameovermsg = "GameOver/{0};".format(k)
+                                        for sck in PlayerSockets:
+                                            sck.send(gameovermsg.encode())
+                                        GameOverSignal = True
+                                        break
+                            else:
+                                killsnakesmsg = "KillSnakes/{0};".format(deathId)
+                                for sck in PlayerSockets:
+                                    sck.send(killsnakesmsg.encode())
+                        else:
+                            for k in range(len(PlayersAliveStatus)):
+                                if PlayersAliveStatus[k]:
+                                    PlayerCoordinator = k
+                                    print("Changed coordinator to: ", PlayerCoordinator)
+                                    break
                     else:
                         print("Message not recognized.")
             else:
