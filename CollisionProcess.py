@@ -24,24 +24,24 @@ class CollisionProcess(mp.Process):
                 if keys:
                     direction = ''
                     if keys[0] == Qt.Key_Up:
-                        if self.possible_move(head, heads, last_direction, 'u'):
+                        if self.possible_move(last_direction, 'u'):
                             direction = 'u'
-                            if head[0] == 0 or self.checkForSnakeParts(head, body_parts, tails, direction):
+                            if head[0] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
                                 should_kill = True
                     elif keys[0] == Qt.Key_Down:
-                        if self.possible_move(head, heads, last_direction, 'd'):
+                        if self.possible_move(last_direction, 'd'):
                             direction = 'd'
-                            if head[0] == 14 or self.checkForSnakeParts(head, body_parts, tails, direction):
+                            if head[0] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
                                 should_kill = True
                     elif keys[0] == Qt.Key_Left:
-                        if self.possible_move(head, heads, last_direction, 'l'):
+                        if self.possible_move(last_direction, 'l'):
                             direction = 'l'
-                            if head[1] == 0 or self.checkForSnakeParts(head, body_parts, tails, direction):
+                            if head[1] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
                                 should_kill = True
                     elif keys[0] == Qt.Key_Right:
-                        if self.possible_move(head, heads, last_direction, 'r'):
+                        if self.possible_move(last_direction, 'r'):
                             direction = 'r'
-                            if head[1] == 14 or self.checkForSnakeParts(head, body_parts, tails, direction):
+                            if head[1] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
                                 should_kill = True
 
                     if should_kill is True:
@@ -57,7 +57,7 @@ class CollisionProcess(mp.Process):
             output_q.put([-1])
     
     @staticmethod
-    def checkForSnakeParts(head, body_parts, tails, direction):
+    def checkForSnakeParts(head, body_parts, tails, all_heads, direction):
         if direction == 'u':
             for body_part in range(len(body_parts)):
                 if head[0] - 1 == body_parts[body_part][0] and head[1] == body_parts[body_part][1]:
@@ -65,20 +65,29 @@ class CollisionProcess(mp.Process):
             for tail in range(len(tails)):   
                 if head[0] - 1 == tails[tail][0] and head[1] == tails[tail][1]:
                     return True
+            for h in range(len(all_heads)):
+                if head[0] - 1 == all_heads[h][0] and head[1] == all_heads[h][1]:
+                    return True
         elif direction == 'd':
             for body_part in range(len(body_parts)):
                 if head[0] + 1 == body_parts[body_part][0] and head[1] == body_parts[body_part][1]:
                     return True
             for tail in range(len(tails)):   
                 if head[0] + 1 == tails[tail][0] and head[1] == tails[tail][1]:
-                    return True            
+                    return True
+            for h in range(len(all_heads)):
+                if head[0] + 1 == all_heads[h][0] and head[1] == all_heads[h][1]:
+                    return True
         elif direction == 'l':
             for body_part in range(len(body_parts)):
                 if head[0] == body_parts[body_part][0] and head[1] - 1 == body_parts[body_part][1]:
                     return True
             for tail in range(len(tails)):   
                 if head[0] == tails[tail][0] and head[1] - 1 == tails[tail][1]:
-                    return True            
+                    return True
+            for h in range(len(all_heads)):
+                if head[0] == all_heads[h][0] and head[1] - 1 == all_heads[h][1]:
+                    return True
         elif direction == 'r':
             for body_part in range(len(body_parts)):
                 if head[0] == body_parts[body_part][0] and head[1] + 1 == body_parts[body_part][1]:
@@ -86,41 +95,44 @@ class CollisionProcess(mp.Process):
             for tail in range(len(tails)):   
                 if head[0] == tails[tail][0] and head[1] + 1 == tails[tail][1]:
                     return True
+            for h in range(len(all_heads)):
+                if head[0] == all_heads[h][0] and head[1] + 1 == all_heads[h][1]:
+                    return True
         else:
             return False
 
     @staticmethod
-    def possible_move(my_head, all_heads, old_dir, new_dir): 
+    def possible_move(old_dir, new_dir):
         if new_dir == 'u':
             if old_dir == 'd':
                 return False
-            else:
+            '''else:
                 for head in range(len(all_heads)):
                     if my_head[0] - 1 == all_heads[head][0] and my_head[1] == all_heads[head][1]:
-                        return False
+                        return False'''
             return True
         elif new_dir == 'd':
             if old_dir == 'u':
                 return False
-            else:
+            '''else:
                 for head in range(len(all_heads)):
                     if my_head[0] + 1 == all_heads[head][0] and my_head[1] == all_heads[head][1]:
-                        return False
+                        return False'''
             return True
         elif new_dir == 'l':
             if old_dir == 'r':
                 return False
-            else:
+            '''else:
                 for head in range(len(all_heads)):
                     if my_head[0] == all_heads[head][0] and my_head[1] - 1 == all_heads[head][1]:
-                        return False
+                        return False'''
             return True
         elif new_dir == 'r':
             if old_dir == 'l':
                 return False
-            else:
+            '''else:
                 for head in range(len(all_heads)):
                     if my_head[0] == all_heads[head][0] and my_head[1] + 1 == all_heads[head][1]:
-                        return False
+                        return False'''
             return True
 
