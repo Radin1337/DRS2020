@@ -14,6 +14,7 @@ class WorkerForce(Worker):
         self.players = players
         self.force = force
         self.grid = grid
+        self.effect = 0
         self.MyUniqueID = myUniqueID
         self.MaxMovesPerSnake = maxMovesPerSnake
         self.PlayerSnakeId = playerSnakeId
@@ -31,11 +32,21 @@ class WorkerForce(Worker):
                         break
                 for s in self.snakes:
                     if s.head.x == ret[2] and s.head.y == ret[3]:
-                        s.eat = 1
-                        if self.PlayerSnakeId[0] == self.MyUniqueID:
-                            self.MaxMovesPerSnake[self.PlayerSnakeId[1]] = \
-                                self.MaxMovesPerSnake[self.PlayerSnakeId[1]] + 1
-                            break
+                        if self.effect % 2 == 0:
+                            print("Usao povecanje!")
+                            s.eat = 1
+                            self.effect += 1
+                            if self.PlayerSnakeId[0] == self.MyUniqueID:
+                                self.MaxMovesPerSnake[self.PlayerSnakeId[1]] = \
+                                    self.MaxMovesPerSnake[self.PlayerSnakeId[1]] + 1
+                                break
+                        else:
+                            print("Usao smanjenje!")
+                            self.effect += 1
+                            if self.PlayerSnakeId[0] == self.MyUniqueID:
+                                self.MaxMovesPerSnake[self.PlayerSnakeId[1]] = \
+                                    self.MaxMovesPerSnake[self.PlayerSnakeId[1]] - 1
+                                break
                 self.update.emit()
 
                 while not self.out_q.empty():
