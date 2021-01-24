@@ -13,6 +13,7 @@ import sys
 
 # creating game window
 from Models.Snake import Snake
+from Models.UnexpectedForce import Force
 from Worker import Worker
 from WorkerEatFood import WorkerEatFood
 from multiprocessing import Queue
