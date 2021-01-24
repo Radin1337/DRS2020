@@ -83,6 +83,16 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                             fsts = "DropFood/{0}/{1};".format(xf, yf)
                             for sck in PlayerSockets:
                                 sck.send(fsts.encode())
+                    elif "ForceRequest" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        reqID = int(splitStrings[1])
+                        if reqID == PlayerCoordinator:
+                            xf, yf = random.randint(0, 14), random.randint(0, 14)
+                            counterForce = 0
+                            fsts = "DropFood/{0}/{1};".format(xf, yf)
+                            for sck in PlayerSockets:
+                                sck.send(fsts.encode())
                     elif "MoveFood" in message:
                         splitStrings = message.split("/")
                         command = splitStrings[0]
@@ -156,6 +166,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
 def changePlayerAndSpawnFood(start_id, numberofplayers):
     time.sleep(1)
     counterFood = 2  # Every time when its 2, its passed 22 second so spawn food
+    counterForce = 3
     firstTime = True
     print("Thread started")
     while True:
@@ -176,6 +187,17 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
                         sck.send(fsts.encode())
             else:
                 counterFood = counterFood + 1
+
+            if counterForce == 3:
+                xf, yf = random.randint(0, 14), random.randint(0, 14)
+                counterForce = 0
+                fsts = "Force/{0}/{1};".format(xf, yf)
+                with lock:
+                    for sck in PlayerSockets:
+                        sck.send(fsts.encode())
+            else:
+                counterForce = counterForce + 1
+
 
             start_id = (start_id+1) % numberofplayers
             while not PlayersAliveStatus[start_id]:

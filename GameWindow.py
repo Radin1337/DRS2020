@@ -106,6 +106,7 @@ class GameWindow(QMainWindow):
 
         self.Food = []
         self.Snakes = []
+        self.Force = []
 
         self.PlayerSnakeId = [self.myUniqueID, 0]
 
@@ -273,6 +274,17 @@ class GameWindow(QMainWindow):
             self.comms_to_send_queue.put(sendFoodReq)
             time.sleep(0.05)
 
+    def drop_force(self, x, y):
+        b = self.grid.itemAtPosition(x, y).widget()
+
+        if b.BType == BlockType.EmptyBlock:
+            self.Force.append(Force(b))
+            self.update()
+        else:
+            sendForceReq = "ForceRequest/{0};".format(self.myUniqueID)
+            self.comms_to_send_queue.put(sendForceReq)
+            time.sleep(0.05)
+
     def keyPressEvent(self, e: QKeyEvent):
         if self.myUniqueID == self.currentIDPlaying:
             if len(self.Players[self.myUniqueID]) != 0:
@@ -365,6 +377,11 @@ class GameWindow(QMainWindow):
                 xf = int(splitlist[1])
                 yf = int(splitlist[2])
                 self.drop_food(xf, yf)
+            elif "Force" in message:
+                splitlist = message.split("/")
+                xf = int(splitlist[1])
+                yf = int(splitlist[2])
+                self.drop_force(xf, yf)
             elif "Command" in message:
                 splitlist = message.split("/")
                 key = splitlist[1]
