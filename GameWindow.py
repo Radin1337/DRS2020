@@ -14,6 +14,7 @@ import sys
 # creating game window
 from Models.Snake import Snake
 from Models.UnexpectedForce import Force
+from ProcessForce import ProcessForce
 from Worker import Worker
 from WorkerEatFood import WorkerEatFood
 from multiprocessing import Queue
@@ -21,6 +22,7 @@ from ProcessEatFood import ProcessEatFood
 from CollisionWorker import CollisionWorker
 from CollisionProcess import CollisionProcess
 from ServerCommsWorker import ServerCommsWorker
+from WorkerForce import WorkerForce
 
 HOST = '127.0.0.1'  # The server's hostname or IP address
 PORT = 65432  # The port used by the server
@@ -126,6 +128,19 @@ class GameWindow(QMainWindow):
         self.eatFoodWorker.start()
         self.signalCounter = 0
 
+        self.in_queue_eatforce = Queue()
+        self.out_queue_eatforce = Queue()
+
+        self.ForceProcess = ProcessForce(self.in_queue_eatforce, self.out_queue_eatforce)
+        self.ForceProcess.start()
+
+        self.ForceWorker = WorkerForce(self.Force, self.Players, self.Snakes, self.maxMovesPerSnake, self.PlayerSnakeId,
+                                       self.myUniqueID, self.in_queue_eatforce, self.out_queue_eatforce, self.grid)
+        self.ForceWorker.update.connect(self.receive_from_eatforce_worker)
+        self.ForceWorker.start()
+
+
+
         self.KeyStrokes = []
         # Setting up process and worker to check up on collisions
         self.in_queue_collision = Queue()
@@ -180,6 +195,8 @@ class GameWindow(QMainWindow):
         if close == QMessageBox.Yes:
             self.eatFoodWorker.thread.terminate()
             self.EatFoodProcess.terminate()
+            self.ForceWorker.thread.terminate()
+            self.ForceProcess.terminate()
             self.CollisionWorker.thread.terminate()
             self.CollisionProcess.terminate()
             self.CommsWorker.thread.terminate()
@@ -320,6 +337,16 @@ class GameWindow(QMainWindow):
         # self.Snakes[0].body_increase(self.grid)
         print("\n Food count ")
         print(len(self.Food))
+        self.signalCounter = self.signalCounter + 1
+
+    @pyqtSlot()
+    def receive_from_eatforce_worker(self):
+        print("Signal received ")
+        print(self.signalCounter)
+
+        # self.Snakes[0].body_increase(self.grid)
+        print("\n Force count ")
+        print(len(self.Force))
         self.signalCounter = self.signalCounter + 1
 
     @pyqtSlot()
