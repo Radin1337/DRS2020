@@ -89,8 +89,17 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                         reqID = int(splitStrings[1])
                         if reqID == PlayerCoordinator:
                             xf, yf = random.randint(0, 14), random.randint(0, 14)
-                            counterForce = 0
                             fsts = "Force/{0}/{1};".format(xf, yf)
+                            for sck in PlayerSockets:
+                                sck.send(fsts.encode())
+                    elif "PointerRequest" in message:
+                        splitStrings = message.split("/")
+                        command = splitStrings[0]
+                        reqID = int(splitStrings[1])
+                        if reqID == PlayerCoordinator:
+                            xf, yf = random.randint(0, 14), random.randint(0, 14)
+                            counterForcePointer = 0
+                            fsts = "Pointer/{0}/{1};".format(xf, yf)
                             for sck in PlayerSockets:
                                 sck.send(fsts.encode())
                     elif "MoveFood" in message:
@@ -208,7 +217,7 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
 
 def SpawnForce():
     time.sleep(1)
-    counterForce = 3
+    counterForcePointer = 10
     firstTime = True
     print("Thread started")
     while True:
@@ -216,17 +225,17 @@ def SpawnForce():
             firstTime = False
             time.sleep(3)
         else:
-            if counterForce == 3:
+            if counterForcePointer == 10:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
-                counterForce = 0
-                fsts = "Force/{0}/{1};".format(xf, yf)
+                counterForcePointer = 0
+                fsts = "Pointer/{0}/{1};".format(xf, yf)
                 with lock:
                     for sck in PlayerSockets:
                         sck.send(fsts.encode())
             else:
-                counterForce = counterForce + 1
+                counterForcePointer = counterForcePointer + 1
             print(len(PlayerSockets))
-            time.sleep(11)
+            time.sleep(2)
 
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
