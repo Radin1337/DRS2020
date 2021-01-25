@@ -166,7 +166,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
 def changePlayerAndSpawnFood(start_id, numberofplayers):
     time.sleep(1)
     counterFood = 2  # Every time when its 2, its passed 22 second so spawn food
-    counterForce = 3
+   # counterForce = 3
     firstTime = True
     print("Thread started")
     while True:
@@ -188,6 +188,34 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
             else:
                 counterFood = counterFood + 1
 
+          #  if counterForce == 3:
+           #     xf, yf = random.randint(0, 14), random.randint(0, 14)
+            #    counterForce = 0
+             #   fsts = "Force/{0}/{1};".format(xf, yf)
+              #  with lock:
+               #     for sck in PlayerSockets:
+                #        sck.send(fsts.encode())
+            #else:
+             #   counterForce = counterForce + 1
+            start_id = (start_id+1) % numberofplayers
+            while not PlayersAliveStatus[start_id]:
+                start_id = (start_id + 1) % numberofplayers
+
+
+            print(len(PlayerSockets))
+            time.sleep(11)
+
+
+def SpawnForce():
+    time.sleep(1)
+    counterForce = 3
+    firstTime = True
+    print("Thread started")
+    while True:
+        if firstTime:
+            firstTime = False
+            time.sleep(3)
+        else:
             if counterForce == 3:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
                 counterForce = 0
@@ -197,13 +225,6 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
                         sck.send(fsts.encode())
             else:
                 counterForce = counterForce + 1
-
-
-            start_id = (start_id+1) % numberofplayers
-            while not PlayersAliveStatus[start_id]:
-                start_id = (start_id + 1) % numberofplayers
-
-
             print(len(PlayerSockets))
             time.sleep(11)
 
@@ -222,6 +243,10 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     x = threading.Thread(target=changePlayerAndSpawnFood, args=(0, numberOfPlayers))
     x.daemon = True
     x.start()
+
+    y = threading.Thread(target=SpawnForce, args=())
+    y.daemon = True
+    y.start()
 
     while not GameOverSignal:
         # print("Msg received")
