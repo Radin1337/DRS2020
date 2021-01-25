@@ -294,11 +294,13 @@ class GameWindow(QMainWindow):
             self.comms_to_send_queue.put(sendFoodReq)
             time.sleep(0.05)
 
-    def drop_force(self, x, y):
+    def drop_force(self, x, y, effect):
         b = self.grid.itemAtPosition(x, y).widget()
 
         if b.BType == BlockType.ForcePointer:
-            self.Force.append(Force(b))
+            f = Force(b)
+            f.effect = effect
+            self.Force.append(f)
             self.update()
         else:
             sendForceReq = "ForceRequest/{0};".format(self.myUniqueID)
@@ -422,7 +424,8 @@ class GameWindow(QMainWindow):
                 splitlist = message.split("/")
                 xf = int(splitlist[1])
                 yf = int(splitlist[2])
-                self.drop_force(xf, yf)
+                eff = int(splitlist[3])
+                self.drop_force(xf, yf, eff)
             elif "Pointer" in message:
                 splitlist = message.split("/")
                 xf = int(splitlist[1])

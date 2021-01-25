@@ -11,6 +11,7 @@ from Models.Block import RotateDegrees
 class Force(Block):
     x = 0
     y = 0
+    effect = 0
     picture = 'resources/unexpected.png'
     deactivateForce = pyqtSignal()
     activateForce = pyqtSignal()

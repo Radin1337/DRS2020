@@ -23,7 +23,7 @@ class ProcessForce(mp.Process):
                 for f in range(len(force)):
                     for s in range(len(snakes)):
                         if force[f][0] == snakes[s][0] and force[f][1] == snakes[s][1]:
-                            out_q.put([force[f][0], force[f][1], snakes[s][0], snakes[s][1]])
+                            out_q.put([force[f][0], force[f][1], snakes[s][0], snakes[s][1]], force[f][2])
                             temp = True
                             time.sleep(0.1)
                             break
