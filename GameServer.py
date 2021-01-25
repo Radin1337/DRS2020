@@ -218,6 +218,7 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
 def SpawnForce():
     time.sleep(1)
     counterForcePointer = 10
+    should_drop = 0
     firstTime = True
     print("Thread started")
     while True:
@@ -225,9 +226,17 @@ def SpawnForce():
             firstTime = False
             time.sleep(3)
         else:
+            if should_drop == 1:
+                fsts = "Force/{0}/{1};".format(xf, yf)
+                with lock:
+                    for sck in PlayerSockets:
+                        sck.send(fsts.encode())
+                should_drop = 0
+
             if counterForcePointer == 10:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
                 counterForcePointer = 0
+                should_drop = 1
                 fsts = "Pointer/{0}/{1};".format(xf, yf)
                 with lock:
                     for sck in PlayerSockets:

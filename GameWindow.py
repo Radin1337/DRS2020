@@ -297,7 +297,7 @@ class GameWindow(QMainWindow):
     def drop_force(self, x, y):
         b = self.grid.itemAtPosition(x, y).widget()
 
-        if b.BType == BlockType.EmptyBlock:
+        if b.BType == BlockType.ForcePointer:
             self.Force.append(Force(b))
             self.update()
         else:
