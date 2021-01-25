@@ -44,6 +44,8 @@ class Block(QWidget):
             p.drawPixmap(r, self.rotate_picture("resources/food.png"))
         elif self.BType == BlockType.Force:
             p.drawPixmap(r, self.rotate_picture("resources/unexpected.png"))
+        elif self.BType == BlockType.ForcePointer:
+            p.drawPixmap(r, self.rotate_picture("resources/pointerForce.png"))
         elif self.BType == BlockType.Head:
             p.drawPixmap(r, self.rotate_picture(self.SnakePart))
         elif self.BType == BlockType.Body:
@@ -72,6 +74,7 @@ class BlockType(enum.IntEnum):
     Tail = 4
     Food = 5
     Force = 6
+    ForcePointer = 7
 
 
 class RotateDegrees(enum.IntEnum):

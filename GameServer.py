@@ -90,7 +90,7 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                         if reqID == PlayerCoordinator:
                             xf, yf = random.randint(0, 14), random.randint(0, 14)
                             counterForce = 0
-                            fsts = "DropFood/{0}/{1};".format(xf, yf)
+                            fsts = "Force/{0}/{1};".format(xf, yf)
                             for sck in PlayerSockets:
                                 sck.send(fsts.encode())
                     elif "MoveFood" in message:
