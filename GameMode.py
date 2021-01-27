@@ -7,6 +7,7 @@ import sys
 from Settings import SettingsWindow
 from GameWindow import GameWindow
 from LoadingScreen import LoadingScreen
+import socket
 
 class GameModeWindow(QMainWindow):
     WindowH = 600
@@ -54,6 +55,19 @@ class GameModeWindow(QMainWindow):
         self.hide()
 
     def joinGame(self):
-        self.gameWindow = LoadingScreen(self.geometry(), -1, -1)
+        ip = '-1'
+        self.setStyleSheet("QInputDialog {background-color: green;};")
+        address, ok = QInputDialog.getText(self,'Server IP address: ',
+                                           'Enter server IP address (For local server leave empty): ')
+        if ok:
+            try:
+                socket.inet_aton(address)
+                print("Manually entered ip address: ", address)
+                ip = address
+            except socket.error:
+                ip = '-1'
+        else:
+            ip = '-1'
+        self.gameWindow = LoadingScreen(self.geometry(), -1, -1, ip)
 
         self.hide()

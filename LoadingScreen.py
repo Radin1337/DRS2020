@@ -10,11 +10,15 @@ PORT = 65432  # The port used by the server
 
 class LoadingScreen(QMainWindow):
 
-    def __init__(self, geom, numberOfPlayers, numberOfSnakes):
+    def __init__(self, geom, numberOfPlayers, numberOfSnakes, selectedIP):
         super().__init__()
+        global HOST
         self.setFixedSize(800, 600)
         self.setWindowFlag(Qt.WindowCloseButtonHint, False)
-
+        if selectedIP == '-1':
+            HOST = '127.0.0.1'
+        else:
+            HOST = selectedIP
         self.myUniqueID = -1
         self.numOfPlayers = numberOfPlayers
         self.numOfSnakes = numberOfSnakes

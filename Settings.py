@@ -83,6 +83,6 @@ class SettingsWindow(QMainWindow):
         subprocess.Popen("python GameServer.py numberOfPlayers={0} numberOfSnakes={1}".format(self.numberOfPlayers,
                                                                                               self.numberOfSnakes))
         time.sleep(1)
-        self.loadWindow = LoadingScreen(self.geometry(),self.numberOfPlayers, self.numberOfSnakes)
+        self.loadWindow = LoadingScreen(self.geometry(),self.numberOfPlayers, self.numberOfSnakes, '-1')
 
         self.hide()
