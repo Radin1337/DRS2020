@@ -88,8 +88,10 @@ def receive_message(key, mask):  # Handling incoming msgs from clients
                         splitStrings = message.split("/")
                         command = splitStrings[0]
                         reqID = int(splitStrings[1])
+                        xf = int(splitStrings[2])
+                        yf = int(splitStrings[3])
                         if reqID == PlayerCoordinator:
-                            xf, yf = random.randint(0, 14), random.randint(0, 14)
+                            #xf, yf = random.randint(0, 14), random.randint(0, 14)
                             fsts = "Force/{0}/{1}/{2};".format(xf, yf, effect)
                             for sck in PlayerSockets:
                                 sck.send(fsts.encode())
@@ -218,7 +220,7 @@ def changePlayerAndSpawnFood(start_id, numberofplayers):
 
 def SpawnForce():
     time.sleep(1)
-    counterForcePointer = 25
+    counterForcePointer = 20
     should_drop = 0
     firstTime = True
     print("Thread started")
@@ -235,7 +237,7 @@ def SpawnForce():
                         sck.send(fsts.encode())
                 should_drop = 0
 
-            if counterForcePointer == 25:
+            if counterForcePointer == 20:
                 xf, yf = random.randint(0, 14), random.randint(0, 14)
                 counterForcePointer = 0
                 should_drop = 1

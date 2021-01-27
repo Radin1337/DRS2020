@@ -303,7 +303,8 @@ class GameWindow(QMainWindow):
             self.Force.append(f)
             self.update()
         else:
-            sendForceReq = "ForceRequest/{0};".format(self.myUniqueID)
+            temp = self.ForcePointer[-1]
+            sendForceReq = "ForceRequest/{0}/{1}/{2};".format(self.myUniqueID, temp.x, temp.y)
             self.comms_to_send_queue.put(sendForceReq)
             time.sleep(0.05)
 

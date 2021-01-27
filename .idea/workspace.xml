@@ -35,8 +35,6 @@
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameServer.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameServer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/GameWindow.py" beforeDir="false" afterPath="$PROJECT_DIR$/GameWindow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Models/UnexpectedForce.py" beforeDir="false" afterPath="$PROJECT_DIR$/Models/UnexpectedForce.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/WorkerForce.py" beforeDir="false" afterPath="$PROJECT_DIR$/WorkerForce.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -300,28 +298,28 @@
       <screen x="0" y="0" width="1920" height="1080" />
     </state>
     <state x="740" y="294" key="FileChooserDialogImpl/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1610197829648" />
-    <state width="1877" height="432" key="GridCell.Tab.0.bottom" timestamp="1611776411747">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1259" height="118" key="GridCell.Tab.0.bottom" timestamp="1611790841909">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="100" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1611593301115" />
+    <state width="1259" height="118" key="GridCell.Tab.0.bottom/0.0.1280.680@0.0.1280.680" timestamp="1611790841908" />
     <state width="1877" height="432" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1611776411747" />
     <state width="1877" height="191" key="GridCell.Tab.0.bottom/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1611763980193" />
-    <state width="1877" height="432" key="GridCell.Tab.0.center" timestamp="1611776411747">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1259" height="118" key="GridCell.Tab.0.center" timestamp="1611790841908">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="100" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1611593301115" />
+    <state width="1259" height="118" key="GridCell.Tab.0.center/0.0.1280.680@0.0.1280.680" timestamp="1611790841908" />
     <state width="1877" height="432" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1611776411747" />
     <state width="1877" height="191" key="GridCell.Tab.0.center/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1611763980193" />
-    <state width="1877" height="432" key="GridCell.Tab.0.left" timestamp="1611776411747">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1259" height="118" key="GridCell.Tab.0.left" timestamp="1611790841908">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="100" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1611593301115" />
+    <state width="1259" height="118" key="GridCell.Tab.0.left/0.0.1280.680@0.0.1280.680" timestamp="1611790841908" />
     <state width="1877" height="432" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1611776411747" />
     <state width="1877" height="191" key="GridCell.Tab.0.left/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1611763980193" />
-    <state width="1877" height="432" key="GridCell.Tab.0.right" timestamp="1611776411747">
-      <screen x="0" y="0" width="1920" height="1040" />
+    <state width="1259" height="118" key="GridCell.Tab.0.right" timestamp="1611790841908">
+      <screen x="0" y="0" width="1280" height="680" />
     </state>
-    <state width="1259" height="100" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1611593301115" />
+    <state width="1259" height="118" key="GridCell.Tab.0.right/0.0.1280.680@0.0.1280.680" timestamp="1611790841908" />
     <state width="1877" height="432" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1611776411747" />
     <state width="1877" height="191" key="GridCell.Tab.0.right/0.0.1920.1080/-1920.0.1920.1080@0.0.1920.1080" timestamp="1611763980193" />
     <state width="1877" height="180" key="GridCell.Tab.1.bottom" timestamp="1610735845178">
@@ -365,8 +363,5 @@
         </breakpoint>
       </default-breakpoints>
     </breakpoint-manager>
-  </component>
-  <component name="com.intellij.coverage.CoverageDataManagerImpl">
-    <SUITE FILE_PATH="coverage/DRS2020$Start.coverage" NAME="Start Coverage Results" MODIFIED="1611776372178" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
