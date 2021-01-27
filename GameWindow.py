@@ -331,7 +331,8 @@ class GameWindow(QMainWindow):
                     self.update()
                 elif cought_key == Qt.Key_Up or cought_key == Qt.Key_Down or cought_key == Qt.Key_Left or cought_key == Qt.Key_Right:
                     if self.movesMadePerSnake[self.PlayerSnakeId[1]] \
-                            < self.maxMovesPerSnake[self.PlayerSnakeId[1]]:
+                            < self.maxMovesPerSnake[self.PlayerSnakeId[1]] and\
+                            self.possible_move(self.Players[self.myUniqueID][self.PlayerSnakeId[1]].last_move, cought_key):
                         self.DidIMadeMOve = True
                         self.afkDeadCounter = 0
                         self.KeyStrokes.append(cought_key)
@@ -484,3 +485,22 @@ class GameWindow(QMainWindow):
                 pass
             else:
                 print("Message not recognized")
+
+    @staticmethod
+    def possible_move(old_dir, new_dir):
+        if new_dir == Qt.Key_Up:
+            if old_dir == 'd':
+                return False
+            return True
+        elif new_dir == Qt.Key_Down:
+            if old_dir == 'u':
+                return False
+            return True
+        elif new_dir == Qt.Key_Left:
+            if old_dir == 'r':
+                return False
+            return True
+        elif new_dir == Qt.Key_Right:
+            if old_dir == 'l':
+                return False
+            return True

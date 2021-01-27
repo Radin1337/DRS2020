@@ -24,25 +24,25 @@ class CollisionProcess(mp.Process):
                 if keys:
                     direction = ''
                     if keys[0] == Qt.Key_Up:
-                        if self.possible_move(last_direction, 'u'):
-                            direction = 'u'
-                            if head[0] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
-                                should_kill = True
+                        #if self.possible_move(last_direction, 'u'):
+                        direction = 'u'
+                        if head[0] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
+                            should_kill = True
                     elif keys[0] == Qt.Key_Down:
-                        if self.possible_move(last_direction, 'd'):
-                            direction = 'd'
-                            if head[0] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
-                                should_kill = True
+                        #if self.possible_move(last_direction, 'd'):
+                        direction = 'd'
+                        if head[0] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
+                            should_kill = True
                     elif keys[0] == Qt.Key_Left:
-                        if self.possible_move(last_direction, 'l'):
-                            direction = 'l'
-                            if head[1] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
-                                should_kill = True
+                        #if self.possible_move(last_direction, 'l'):
+                        direction = 'l'
+                        if head[1] == 0 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
+                            should_kill = True
                     elif keys[0] == Qt.Key_Right:
-                        if self.possible_move(last_direction, 'r'):
-                            direction = 'r'
-                            if head[1] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
-                                should_kill = True
+                        #if self.possible_move(last_direction, 'r'):
+                        direction = 'r'
+                        if head[1] == 14 or self.checkForSnakeParts(head, body_parts, tails, heads, direction):
+                            should_kill = True
 
                     if should_kill is True:
                         output_q.put([head[0], head[1], keys[0]])

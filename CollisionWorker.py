@@ -16,9 +16,10 @@ class CollisionWorker(Worker):
         self.output_q = output_q
         self.MaxSteps = maxStepsMatrix
         self.StepsMade = stepsMadeMatrix
+
     def work(self):
         while True:
-            if self.ps_id and self.players[self.ps_id[0]]:
+            if len(self.ps_id) == 2 and self.players[self.ps_id[0]]:
                 #p_id = self.ps_id[0]
                 #s_id = self.ps_id[1]
                 snake = self.players[self.ps_id[0]][self.ps_id[1]]
@@ -38,7 +39,7 @@ class CollisionWorker(Worker):
                             self.all_snakes.remove(snake)
                             self.players[self.ps_id[0]].remove(snake)
                             snake.kill_snake(self.grid)
-                            self.ps_id[1] = 0
+
                             self.keys.remove(ret_val[2])
 
                             if self.ps_id[0] == self.myUniqueId:
@@ -46,6 +47,7 @@ class CollisionWorker(Worker):
                                 self.StepsMade.remove(self.StepsMade[self.ps_id[1]])
                                 # print(self.MaxSteps)
                                 # print(self.StepsMade)
+                            self.ps_id[1] = 0
                             if self.players[self.ps_id[0]] and self.myUniqueId == self.ps_id[0]:
                                 self.players[self.ps_id[0]][0].on_off_move(self.grid)
                     else:
