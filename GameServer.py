@@ -247,7 +247,7 @@ def SpawnForce():
                         sck.send(fsts.encode())
             else:
                 counterForcePointer = counterForcePointer + 1
-            print(len(PlayerSockets))
+            
             time.sleep(2)
 
 

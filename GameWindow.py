@@ -249,7 +249,7 @@ class GameWindow(QMainWindow):
                     securityCounter = 0
                     b = self.grid.itemAtPosition(currX, currY).widget()
                     while True:
-                        delta = random.randint(-4, 4)
+                        delta = random.randint(-3, 3)
                         xyChoose = random.randint(0, 1)
                         if xyChoose == 0:
                             newX = currX + delta
