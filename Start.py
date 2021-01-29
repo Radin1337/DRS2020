@@ -1,8 +1,10 @@
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QWidget, QApplication, QMainWindow, QDesktopWidget, QComboBox, QMessageBox, QLabel, QVBoxLayout
-from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent
+from PyQt5.QtGui import QPixmap, QCursor, QKeyEvent, QIcon
 from PyQt5.QtCore import Qt
 import sys
+
+from GameMode import GameModeWindow
 
 
 class MainWindow(QWidget):
@@ -16,7 +18,9 @@ class MainWindow(QWidget):
 
     # noinspection PyMethodMayBeStatic
     def run(self):
-        print("Run")
+        # print("Run Run")
+        self.GameMode = GameModeWindow(self)
+        self.hide()
 
     # Nice way to close application
     # noinspection PyMethodMayBeStatic
@@ -26,10 +30,13 @@ class MainWindow(QWidget):
     def initUI(self):
         pixmap = QPixmap("resources/topimage.jpg")
         pixmap2 = pixmap.scaledToWidth(600)
+
         lbl = QLabel(self)
         lbl.setPixmap(pixmap2)
         lbl.move(100, 10)
         lbl.setStyleSheet("border: 2px solid blue;")
+
+        self.setWindowIcon(QIcon('resources/icon.png'))
 
         self.initMainMenuButtons()
         self.resize(self.MainWindowH, self.MainWindowW)
@@ -39,8 +46,6 @@ class MainWindow(QWidget):
         self.setMaximumWidth(self.MainWindowW)
         self.setWindowTitle("Turn Snake - The first Snake turn based strategy")
         self.setStyleSheet("background-color: black;")
-
-
 
         self.center()
         self.show()
